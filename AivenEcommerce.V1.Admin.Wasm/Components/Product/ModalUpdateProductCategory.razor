@@ -115,7 +115,7 @@
 
     async Task Save(MouseEventArgs args)
     {
-        var result = await ProductService.UpdateCategory(Product.Id, category, subcategory);
+        var result = await ProductService.UpdateCategory(new(Product.Id, category, subcategory));
 
         if (result.IsSuccess)
         {

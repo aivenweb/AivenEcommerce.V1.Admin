@@ -9,13 +9,15 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
     public interface IProductService
     {
         Task<OperationResult<ProductDto>> GetAsync(string id);
+        Task<OperationResult> DeleteAsync(string id);
         Task<OperationResultEnumerable<ProductDto>> GetAllAsync();
-        Task<OperationResult<ProductDto>> UpdateCategory(string id, string category, string subcategory);
+        Task<OperationResult<ProductDto>> UpdateCategory(UpdateProductCategorySubCategoryInput input);
         Task<OperationResult<ProductDto>> CreateProduct(CreateProductInput input);
-        Task<OperationResult<ProductDto>> UpdateMainImageAsync(string id, Uri image);
-        Task<OperationResult<ProductDto>> UpdateCostPriceAsync(string id, decimal cost, decimal price);
-        Task<OperationResult<ProductDto>> UpdateAvailabilityAsync(string id, bool isActive, int stock);
-        Task<OperationResult<ProductDto>> UpdateNameDescriptionAsync(string id, string name, string descripción);
+        Task<OperationResult<ProductDto>> UpdateMainImageAsync(UpdateProductMainImageInput input);
+        Task<OperationResult<ProductDto>> UpdateCostPriceAsync(UpdateProductCostPriceInput input);
+        Task<OperationResult<ProductDto>> UpdateAvailabilityAsync(UpdateProductAvailabilityInput input);
+        Task<OperationResult<ProductDto>> UpdateNameDescriptionAsync(UpdateProductNameDescriptionInput input);
+        Task<OperationResult<ProductDto>> UpdateBadgeAsync(UpdateProductBadgeInput input);
 
     }
 }

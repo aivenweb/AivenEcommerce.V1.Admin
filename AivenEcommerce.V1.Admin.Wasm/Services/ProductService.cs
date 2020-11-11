@@ -26,34 +26,44 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
             return _apiClient.GetAsync<OperationResultEnumerable<ProductDto>>("api/v1/products");
         }
 
-        public Task<OperationResult<ProductDto>> UpdateMainImageAsync(string id, Uri image)
+        public Task<OperationResult<ProductDto>> UpdateMainImageAsync(UpdateProductMainImageInput input)
         {
-            return _apiClient.PutAsync<UpdateProductMainImageInput, OperationResult<ProductDto>>("api/v1/products/UpdateMainImage", new UpdateProductMainImageInput(id, image));
+            return _apiClient.PutAsync<UpdateProductMainImageInput, OperationResult<ProductDto>>("api/v1/products/UpdateMainImage", input);
         }
 
-        public Task<OperationResult<ProductDto>> UpdateCostPriceAsync(string id, decimal cost, decimal price)
+        public Task<OperationResult<ProductDto>> UpdateCostPriceAsync(UpdateProductCostPriceInput input)
         {
-            return _apiClient.PutAsync<UpdateProductCostPriceInput, OperationResult<ProductDto>>("api/v1/products/UpdateCostPrice", new UpdateProductCostPriceInput(id, cost, price));
+            return _apiClient.PutAsync<UpdateProductCostPriceInput, OperationResult<ProductDto>>("api/v1/products/UpdateCostPrice", input);
         }
 
-        public Task<OperationResult<ProductDto>> UpdateCategory(string id, string category, string subcategory)
+        public Task<OperationResult<ProductDto>> UpdateCategory(UpdateProductCategorySubCategoryInput input)
         {
-            return _apiClient.PutAsync<UpdateProductCategorySubCategoryInput, OperationResult<ProductDto>>("api/v1/products/UpdateCategory", new UpdateProductCategorySubCategoryInput(id, category, subcategory));
+            return _apiClient.PutAsync<UpdateProductCategorySubCategoryInput, OperationResult<ProductDto>>("api/v1/products/UpdateCategory", input);
         }
 
-        public Task<OperationResult<ProductDto>> UpdateAvailabilityAsync(string id, bool isActive, int stock)
+        public Task<OperationResult<ProductDto>> UpdateAvailabilityAsync(UpdateProductAvailabilityInput input)
         {
-            return _apiClient.PutAsync<UpdateProductAvailabilityInput, OperationResult<ProductDto>>("api/v1/products/UpdateAvailability", new UpdateProductAvailabilityInput(id, stock, isActive));
+            return _apiClient.PutAsync<UpdateProductAvailabilityInput, OperationResult<ProductDto>>("api/v1/products/UpdateAvailability", input);
         }
 
-        public Task<OperationResult<ProductDto>> UpdateNameDescriptionAsync(string id, string name, string descripción)
+        public Task<OperationResult<ProductDto>> UpdateNameDescriptionAsync(UpdateProductNameDescriptionInput input)
         {
-            return _apiClient.PutAsync<UpdateProductNameDescriptionInput, OperationResult<ProductDto>>("api/v1/products/UpdateNameDescription", new UpdateProductNameDescriptionInput(id, name, descripción));
+            return _apiClient.PutAsync<UpdateProductNameDescriptionInput, OperationResult<ProductDto>>("api/v1/products/UpdateNameDescription", input);
         }
 
         public Task<OperationResult<ProductDto>> CreateProduct(CreateProductInput input)
         {
             return _apiClient.PostAsync<CreateProductInput, OperationResult<ProductDto>>("api/v1/products", input);
+        }
+
+        public Task<OperationResult<ProductDto>> UpdateBadgeAsync(UpdateProductBadgeInput input)
+        {
+            return _apiClient.PutAsync<UpdateProductBadgeInput, OperationResult<ProductDto>>("api/v1/products/UpdateBadge", input);
+        }
+
+        public Task<OperationResult> DeleteAsync(string id)
+        {
+            return _apiClient.DeleteAsync<OperationResult>("api/v1/products/" + id);
         }
     }
 }

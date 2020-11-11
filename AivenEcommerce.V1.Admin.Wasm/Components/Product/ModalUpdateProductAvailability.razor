@@ -74,7 +74,7 @@
 
     async Task Save(MouseEventArgs args)
     {
-        var result = await ProductService.UpdateAvailabilityAsync(Product.Id, isActive, stock);
+        var result = await ProductService.UpdateAvailabilityAsync(new (Product.Id, stock, isActive));
 
         if (result.IsSuccess)
         {

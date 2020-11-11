@@ -78,7 +78,7 @@
 
     async Task Save(MouseEventArgs args)
     {
-        var result = await ProductService.UpdateCostPriceAsync(Product.Id, cost, price);
+        var result = await ProductService.UpdateCostPriceAsync(new (Product.Id, cost, price));
 
         if (result.IsSuccess)
         {

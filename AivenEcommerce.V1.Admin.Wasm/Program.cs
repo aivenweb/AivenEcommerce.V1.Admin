@@ -47,6 +47,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IProductImageService, ProductImageService>();
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductOverviewService, ProductOverviewService>();
+            builder.Services.AddScoped<IProductBadgeService, ProductBadgeService>();
 
             await builder.Build().RunAsync();
         }

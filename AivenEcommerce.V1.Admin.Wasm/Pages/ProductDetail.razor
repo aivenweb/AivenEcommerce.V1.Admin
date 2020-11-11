@@ -2,7 +2,9 @@
 @inject IProductService ProductService
 @inject IProductImageService ProductImageService
 @inject IJSRuntime JSRuntime
+@inject IProductBadgeService ProductBadgeService
 @inject AlertComponentService AlertService
+@inject NavigationManager NavigationManager
 
 <div class="main-content container-fluid">
     @if (Product is not null)
@@ -75,14 +77,30 @@
                                     <td class="text-bold-500">@(Product.PercentageOff + "%")</td>
                                 </tr>
                             </table>
-                            <div class="badges">
-                                <span class="badge bg-danger">Más Vendido</span>
-                                <span class="badge bg-warning">En Oferta</span>
-                                <span class="badge bg-success">Nuevo</span>
-                            </div>
+                            @if (ProductBadges is not null)
+                            {
+                                <div class="badges">
+                                    @if (ProductBadges.Contains(ProductBadgeName.BestSeller))
+                                    {
+                                        <span class="badge bg-danger">Más Vendido</span>
+                                    }
+
+                                    @if (ProductBadges.Contains(ProductBadgeName.InOffer))
+                                    {
+                                        <span class="badge bg-warning">En Oferta</span>
+                                    }
+
+                                    @if (ProductBadges.Contains(ProductBadgeName.New))
+                                    {
+                                        <span class="badge bg-success">Nuevo</span>
+                                    }
+
+                                </div>
+                            }
+
 
                             <div class="d-flex justify-content-end">
-                                <NavLink href="#" class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</NavLink>
+                                <button class="btn icon icon-left btn-primary" @onclick="EditBadgeOnClick"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -146,6 +164,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button @onclick="DeleteProductOnClick" href="#" class="btn icon icon-left btn-danger"><i data-feather="trash-2"></i> Eliminar Producto</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -157,6 +179,9 @@
 
         <ModalUpdateProductAvailability @ref="ModalUploadAvailability" Product="Product" OnCloseCallback="CloseModalOnClick" />
 
+        <ModalUpdateProductBadge @ref="ModalUploadBadge" Product="Product" ProductBadges="ProductBadges" OnCloseCallback="CloseModalBadgeOnClick" />
+
+
     }
 </div>
 @code {
@@ -166,6 +191,7 @@
 
     ProductDto Product { get; set; }
     IEnumerable<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
+    IEnumerable<ProductBadgeName> ProductBadges { get; set; } = new List<ProductBadgeName>();
 
     string BigImageUri { get; set; } = ImageConstants.IMAGENOTFOUND;
 
@@ -173,17 +199,19 @@
     ModalUploadProductImage ModalUploadImage;
     ModalUpdateProductCategory ModalUploadCategory;
     ModalUpdateProductAvailability ModalUploadAvailability;
+    ModalUpdateProductBadge ModalUploadBadge;
 
     protected override void OnInitialized()
     {
         this.ProductService.GetAsync(ProductId)
-            .ContinueWith(x =>
-            {
-                Product = x.Result.Result;
-                BigImageUri = Product.Thumbnail.ToString();
-                StateHasChanged();
-            });
+        .ContinueWith(x =>
+        {
+            Product = x.Result.Result;
+            BigImageUri = Product.Thumbnail.ToString();
+            StateHasChanged();
+        });
 
+        UpdateBadges();
         UpdateImages();
     }
 
@@ -191,19 +219,25 @@
     {
         var imageUri = ProductImages.Single(x => x.Id == productImageId).Image;
 
-        this.ProductService.UpdateMainImageAsync(ProductId, imageUri)
-            .ContinueWith(x =>
-            {
-                Product = x.Result.Result;
-                BigImageUri = Product.Thumbnail.ToString();
-                StateHasChanged();
-            });
+        this.ProductService.UpdateMainImageAsync(new(ProductId, imageUri))
+        .ContinueWith(x =>
+        {
+            Product = x.Result.Result;
+            BigImageUri = Product.Thumbnail.ToString();
+            StateHasChanged();
+        });
 
     }
 
     void CloseModalAddImageOnClick(MouseEventArgs args)
     {
         UpdateImages();
+    }
+
+    void CloseModalBadgeOnClick(MouseEventArgs args)
+    {
+        UpdateBadges();
+        UpdateProduct();
     }
 
 
@@ -239,21 +273,31 @@
     void UpdateImages()
     {
         var productImageTask = this.ProductImageService.GetAllAsync(ProductId)
-            .ContinueWith(x =>
-            {
-                ProductImages = x.Result.Result;
-                StateHasChanged();
-            });
+        .ContinueWith(x =>
+        {
+            ProductImages = x.Result.Result;
+            StateHasChanged();
+        });
     }
 
     void UpdateProduct()
     {
         var productTask = this.ProductService.GetAsync(ProductId)
-            .ContinueWith(x =>
-            {
-                Product = x.Result.Result;
-                StateHasChanged();
-            });
+        .ContinueWith(x =>
+        {
+            Product = x.Result.Result;
+            StateHasChanged();
+        });
+    }
+
+    void UpdateBadges()
+    {
+        ProductBadgeService.GetByProductAsync(ProductId)
+        .ContinueWith(x =>
+        {
+            ProductBadges = x.Result.Result.Badges;
+            StateHasChanged();
+        });
     }
 
     Task EditCostPriceOnClick()
@@ -269,5 +313,19 @@
     Task EditAvailabilityOnClick()
     {
         return ModalUploadAvailability.Show();
+    }
+
+    Task EditBadgeOnClick()
+    {
+        return ModalUploadBadge.Show();
+    }
+
+    async Task DeleteProductOnClick()
+    {
+        var result = await ProductService.DeleteAsync(ProductId);
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo("Products");
+        }
     }
 }
