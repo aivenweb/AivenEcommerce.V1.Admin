@@ -1,0 +1,103 @@
+﻿@page "/categories"
+@inject IJSRuntime JSRuntime
+@inject IProductCategoryService CategoryService
+
+@implements IAsyncDisposable
+
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Categorias</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><NavLink href="/">Dashboard</NavLink></li>
+                        <li class="breadcrumb-item active" aria-current="page">Productos</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <NavLink href="categories/create" class="btn icon btn-secondary"><i data-feather="plus"></i> Crear Nuevo</NavLink>
+            </div>
+            <div class="card-body">
+                <table class='table table-striped' id="table1">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad de Subcategorias</th>
+                            <th>Ver más</th>
+      
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in ListCategories)
+                        {
+                            <tr>
+
+                                <td>@item.Name</td>
+                                <td>@item.SubCategories.Count()</td>
+            
+                                <td data-sortable="false">
+                                    <NavLink href=@("/categories/" + item.Name) class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Entrar</NavLink>
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+@code {
+
+    public List<ProductCategoryDto> ListCategories { get; set; } = new List<ProductCategoryDto>();
+
+    // Load the module and keep a reference to it
+    // You need to use .AsTask() to convert the ValueTask to Task as it may be awaited multiple times
+    private Task<IJSObjectReference> _module;
+    private Task<IJSObjectReference> Module => _module ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./assets/js/vendors.js").AsTask();
+
+    async Task Submit()
+    {
+        var module = await Module;
+        await module.InvokeVoidAsync("dataTable");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            var module = await _module;
+            await module.DisposeAsync();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await CategoryService.GetAllAsync();
+        if (result.IsSuccess)
+        {
+            ListCategories.AddRange(result.Result);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await Submit();
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+        }
+    }
+}
