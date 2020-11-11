@@ -1,0 +1,28 @@
+﻿.product-image-thumb {
+    box-shadow: 0 1px 2px rgba(0,0,0,.075);
+    border-radius: .25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: 1rem;
+    width: auto;
+    padding: .5rem;
+    cursor: pointer;
+    height: 7rem;
+    margin-bottom: 1rem;
+}
+
+.product-image-thumb-img {
+    width: 80%;
+    margin: 0 0.5rem;
+}
+
+    .product-image-thumb-img:hover {
+        opacity: .5;
+    }
+
+
+.product-image-thumb-close {
+    align-self: self-end;
+}

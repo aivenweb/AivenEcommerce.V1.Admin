@@ -1,0 +1,101 @@
+﻿@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+@inject IProductService ProductService
+<div class="modal fade" id="updateProductCostPrice" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="updateProductCostPriceTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateProductCostPriceTitle">Editar Costo y Precio</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="OnCloseCallback">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Costo</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="number" class="form-control" placeholder="Precio" @bind="cost">
+                                        <div class="form-control-icon">
+                                            <i data-feather="dollar-sign"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Precio</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="number" class="form-control" placeholder="Costo" @bind="price">
+                                        <div class="form-control-icon">
+                                            <i data-feather="dollar-sign"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" @onclick="OnCloseCallback">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="Save">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    [Parameter]
+    public ProductDto Product { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+    decimal cost = 0;
+    decimal price = 0;
+
+    protected override void OnInitialized()
+    {
+        cost = Product.Cost;
+        price = Product.Price;
+    }
+
+
+    async Task Save(MouseEventArgs args)
+    {
+        var result = await ProductService.UpdateCostPriceAsync(Product.Id, cost, price);
+
+        if (result.IsSuccess)
+        {
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.hideModal", "updateProductCostPrice").AsTask();
+            if (OnCloseCallback.HasDelegate)
+                await OnCloseCallback.InvokeAsync();
+        }
+        else
+        {
+            AlertService.Show("Editar Producto", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+    public async Task Show()
+    {
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "updateProductCostPrice").AsTask();
+        cost = Product.Cost;
+        price = Product.Price;
+    }
+}

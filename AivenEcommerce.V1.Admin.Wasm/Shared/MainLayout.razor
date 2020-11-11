@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<SpinKitCubeGrid />
+<Alert Color="danger" Title="Hubo un Error" Message="Refresca el sitio y prueba nuevamente" />
+<div id="app">
+    <div id="sidebar" class='active'>
+        <SideBar />
+    </div>
+    <div id="main">
+        <NavMenu />
+        @Body
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-left">
+                    <p>2020 &copy; Voler</p>
+                </div>
+                <div class="float-right">
+                    <p>Crafted with <span class='text-danger'><i data-feather="heart"></i></span> by <a href="http://ahmadsaugi.com">Ahmad Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+@code {
+
+    // Load the module and keep a reference to it
+    // You need to use .AsTask() to convert the ValueTask to Task as it may be awaited multiple times
+    private Task<IJSObjectReference> _mainModule;
+    private Task<IJSObjectReference> MainModule => _mainModule ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./assets/js/main.js").AsTask();
+
+    async Task Submit()
+    {
+        var module = await MainModule;
+        await module.InvokeVoidAsync("main");
+
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_mainModule is not null)
+        {
+            var module = await _mainModule;
+            await module.DisposeAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Submit();
+        }
+    }
+}

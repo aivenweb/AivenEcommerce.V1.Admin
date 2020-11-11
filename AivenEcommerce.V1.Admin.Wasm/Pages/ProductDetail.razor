@@ -1,0 +1,273 @@
+﻿@page "/products/{ProductId}"
+@inject IProductService ProductService
+@inject IProductImageService ProductImageService
+@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+
+<div class="main-content container-fluid">
+    @if (Product is not null)
+    {
+        <div class="page-title">
+            <h3>@Product.Name <NavLink href="@("/products/edit/" + ProductId)" class="btn icon btn-outline-primary"><i data-feather="edit"></i></NavLink></h3>
+        </div>
+
+
+        <section class="section">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@BigImageUri" class="product-thumbnail" height="100%" />
+                    </div>
+                    <div class="row">
+                        @foreach (var item in ProductImages)
+                        {
+                            <div class="col-md-4">
+                                <ProductImageThumb Image="@item.Image"
+                                                   HideClose="BigImageUri == item.Image.ToString()"
+                                                   OnClickCallback="() => ImageOnClick(item.Id)"
+                                                   OnCloseCallback="() => CloseImageOnClick(item.Id)" />
+                            </div>
+                        }
+
+                        <div class="col-md-4">
+                            <ProductImageThumb HideClose="true" Image="@(new Uri("https://icons-for-free.com/iconfiles/png/512/add+photo+plus+upload+icon-1320184050039319890.png"))" OnClickCallback="() => AddImageOnClick()" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Disponibilidad</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom:25px">
+                                <div class="col-md-6 text-center">
+                                    <h6>Este producto esta</h6>
+                                    @if (Product.IsActive)
+                                    {
+                                        <span class="badge bg-success" style="font-size:16px">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger" style="font-size:16px">Inactivo</span>
+                                    }
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <h6>Stock</h6>
+                                    <h1 class='text-purple'>@Product.Stock</h1>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary" @onclick="EditAvailabilityOnClick"><i data-feather="edit"></i> Editar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Carteles</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Porcentaje de Descuento</td>
+                                    <td class="text-bold-500">@(Product.PercentageOff + "%")</td>
+                                </tr>
+                            </table>
+                            <div class="badges">
+                                <span class="badge bg-danger">Más Vendido</span>
+                                <span class="badge bg-warning">En Oferta</span>
+                                <span class="badge bg-success">Nuevo</span>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <NavLink href="#" class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</NavLink>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Ganancias</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <h6>En el último mes</h6>
+                                <h1 class='text-green'>+$2,134</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Costo/Precio</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Costo</td>
+                                    <td class="text-bold-500">@("$" + Product.Cost)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Precio</td>
+                                    <td class="text-bold-500">@("$" + Product.Price)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Ganacia c/u</td>
+                                    <td class="text-bold-500">@("$" + (Product.Price - Product.Cost))</td>
+                                </tr>
+
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <button @onclick="EditCostPriceOnClick" href="#" class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Categoria</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Categoria</td>
+                                    <td class="text-bold-500">@Product.Category.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">SubCategoria</td>
+                                    <td class="text-bold-500">@Product.SubCategory.ToString()</td>
+                                </tr>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <button @onclick="EditCategoryOnClick" href="#" class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <ModalUploadProductImage @ref="ModalUploadImage" ProductId="@ProductId" OnCloseCallback="CloseModalAddImageOnClick" />
+
+        <ModalUpdateProductCostPrice @ref="ModalUploadCostPrice" Product="Product" OnCloseCallback="CloseModalOnClick" />
+
+        <ModalUpdateProductCategory @ref="ModalUploadCategory" Product="Product" OnCloseCallback="CloseModalOnClick" />
+
+        <ModalUpdateProductAvailability @ref="ModalUploadAvailability" Product="Product" OnCloseCallback="CloseModalOnClick" />
+
+    }
+</div>
+@code {
+
+    [Parameter]
+    public string ProductId { get; set; }
+
+    ProductDto Product { get; set; }
+    IEnumerable<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
+
+    string BigImageUri { get; set; } = ImageConstants.IMAGENOTFOUND;
+
+    ModalUpdateProductCostPrice ModalUploadCostPrice;
+    ModalUploadProductImage ModalUploadImage;
+    ModalUpdateProductCategory ModalUploadCategory;
+    ModalUpdateProductAvailability ModalUploadAvailability;
+
+    protected override void OnInitialized()
+    {
+        this.ProductService.GetAsync(ProductId)
+            .ContinueWith(x =>
+            {
+                Product = x.Result.Result;
+                BigImageUri = Product.Thumbnail.ToString();
+                StateHasChanged();
+            });
+
+        UpdateImages();
+    }
+
+    void ImageOnClick(Guid productImageId)
+    {
+        var imageUri = ProductImages.Single(x => x.Id == productImageId).Image;
+
+        this.ProductService.UpdateMainImageAsync(ProductId, imageUri)
+            .ContinueWith(x =>
+            {
+                Product = x.Result.Result;
+                BigImageUri = Product.Thumbnail.ToString();
+                StateHasChanged();
+            });
+
+    }
+
+    void CloseModalAddImageOnClick(MouseEventArgs args)
+    {
+        UpdateImages();
+    }
+
+
+    void CloseModalOnClick(MouseEventArgs args)
+    {
+        UpdateProduct();
+    }
+
+    Task AddImageOnClick()
+    {
+        return ModalUploadImage.Show();
+    }
+
+    async Task CloseImageOnClick(Guid productImageId)
+    {
+        var result = await ProductImageService.DeleteImageAsync(ProductId, productImageId);
+        if (!result.IsSuccess)
+        {
+            AlertService.Show("Eliminar Imagen.", result.Validations.Messages.First().Message, "danger");
+        }
+        else
+        {
+            UpdateImages();
+        }
+
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+    }
+
+    void UpdateImages()
+    {
+        var productImageTask = this.ProductImageService.GetAllAsync(ProductId)
+            .ContinueWith(x =>
+            {
+                ProductImages = x.Result.Result;
+                StateHasChanged();
+            });
+    }
+
+    void UpdateProduct()
+    {
+        var productTask = this.ProductService.GetAsync(ProductId)
+            .ContinueWith(x =>
+            {
+                Product = x.Result.Result;
+                StateHasChanged();
+            });
+    }
+
+    Task EditCostPriceOnClick()
+    {
+        return ModalUploadCostPrice.Show();
+    }
+
+    Task EditCategoryOnClick()
+    {
+        return ModalUploadCategory.Show();
+    }
+
+    Task EditAvailabilityOnClick()
+    {
+        return ModalUploadAvailability.Show();
+    }
+}

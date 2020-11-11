@@ -1,0 +1,23 @@
+﻿<div class="product-image-thumb d-flex justify-content-center">
+    <img class="product-image-thumb-img" src="@Image" alt="Product Image" @onclick="OnClickCallback"/>
+    @if (!HideClose)
+    {
+        <button type="button" class="close product-image-thumb-close" data-dismiss="alert" aria-label="Close" @onclick="OnCloseCallback">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Uri Image { get; set; }
+
+    [Parameter]
+    public bool HideClose { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+}

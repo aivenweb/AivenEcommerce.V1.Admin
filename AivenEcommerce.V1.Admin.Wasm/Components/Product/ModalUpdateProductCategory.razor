@@ -1,0 +1,158 @@
+﻿@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+@inject IProductService ProductService
+@inject IProductCategoryService ProductCategoryService
+<div class="modal fade" id="updateProductCategory" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="updateProductCategoryTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateProductCategoryTitle">Editar Categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="OnCloseCallback">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Categoria</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div class="position-relative">
+
+                                        <select class="choices form-select" id="product-edit-category" @onchange=CategoryChange>
+                                            @if (productCategories is not null)
+                                                @foreach (var item in productCategories)
+                                                {
+                                                    <option value="@item.Name">@item.Name</option>
+                                                }
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @if (showSubcategory)
+                            {
+                                <div class="col-md-4">
+                                    <label>SubCategoria</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group has-icon-left">
+                                        <div class="position-relative">
+
+                                            @if (productCategory is not null)
+                                            {
+                                                <select class="choices form-select" id="product-edit-subcategory" @onchange=SubCategoryChange>
+
+                                                    @foreach (var item in productCategory.SubCategories)
+                                                    {
+                                                        <option value="@item">@item</option>
+                                                    }
+                                                </select>
+                                            }
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" @onclick="OnCloseCallback">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="Save">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    [Parameter]
+    public ProductDto Product { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+    string category = string.Empty;
+    string subcategory = string.Empty;
+    bool showSubcategory = false;
+    IEnumerable<ProductCategoryDto> productCategories;
+    ProductCategoryDto productCategory;
+
+
+    protected override void OnInitialized()
+    {
+        category = Product.Category;
+        subcategory = Product.SubCategory;
+
+        ProductCategoryService.GetAllAsync().ContinueWith(x =>
+        {
+            productCategories = x.Result.Result.Where(x => x.Name == category).Concat(x.Result.Result.Where(x => x.Name != category));
+        });
+
+        ProductCategoryService.GetAsync(category).ContinueWith(x =>
+        {
+            productCategory = x.Result.Result;
+            showSubcategory = true;
+            StateHasChanged();
+        });
+    }
+
+
+    async Task Save(MouseEventArgs args)
+    {
+        var result = await ProductService.UpdateCategory(Product.Id, category, subcategory);
+
+        if (result.IsSuccess)
+        {
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.hideModal", "updateProductCategory").AsTask();
+            if (OnCloseCallback.HasDelegate)
+                await OnCloseCallback.InvokeAsync();
+        }
+        else
+        {
+            AlertService.Show("Editar Producto", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+    void SubCategoryChange(ChangeEventArgs e)
+    {
+        subcategory = e.Value.ToString();
+    }
+
+    async Task CategoryChange(ChangeEventArgs e)
+    {
+        category = e.Value.ToString();
+        await ProductCategoryService.GetAsync(e.Value.ToString()).ContinueWith(async x =>
+        {
+            showSubcategory = false;
+            StateHasChanged();
+            productCategory = x.Result.Result;
+            subcategory = productCategory.SubCategories.First();
+            showSubcategory = true;
+            StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-subcategory");
+        });
+    }
+
+    public async Task Show()
+    {
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "updateProductCategory");
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-category");
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-subcategory");
+    }
+}
