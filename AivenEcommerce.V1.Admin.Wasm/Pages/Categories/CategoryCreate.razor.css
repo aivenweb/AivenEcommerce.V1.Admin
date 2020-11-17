@@ -1,0 +1,12 @@
+﻿.subcategory-list {
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+.subcategory-row {
+    margin: 10px 0;
+}
+
+#subcategory-input {
+    margin-bottom: 20px
+}

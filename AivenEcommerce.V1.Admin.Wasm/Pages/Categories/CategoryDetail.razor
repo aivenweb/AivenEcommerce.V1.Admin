@@ -1,4 +1,4 @@
-﻿@page "/categories"
+﻿@page "/categories/{CategoryName}"
 @inject IJSRuntime JSRuntime
 @inject IProductCategoryService CategoryService
 
@@ -8,13 +8,14 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Categorias</h3>
+                <h3>@CategoryName <NavLink href="@($"/categories/{CategoryName}/edit/")" class="btn icon btn-outline-primary"><i data-feather="edit"></i></NavLink></h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class='breadcrumb-header'>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><NavLink href="/">Dashboard</NavLink></li>
-                        <li class="breadcrumb-item active" aria-current="page">Productos</li>
+                        <li class="breadcrumb-item"><NavLink href="/categories">Categorias</NavLink></li>
+                        <li class="breadcrumb-item active" aria-current="page">@CategoryName</li>
                     </ol>
                 </nav>
             </div>
@@ -26,35 +27,39 @@
                 <NavLink href="/categories/create" class="btn icon btn-secondary"><i data-feather="plus"></i> Crear Nuevo</NavLink>
             </div>
             <div class="card-body">
-                <table class='table table-striped' id="table1">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Cantidad de Subcategorias</th>
-                            <th>Cantidad de Productos</th>
-                            <th>Ver más</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var item in ListCategories)
-                        {
+                @if (SubCategoryDtos is not null)
+                {
+                    <table class='table table-striped' id="table1">
+                        <thead>
                             <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad de Productos</th>
+                                <th></th>
 
-                                <td>@item.Name</td>
-                                <td>@item.SubCategories.Count()</td>
-                                <td><NavLink href="@($"/products/categories/{item.Name}")">@item.ProductCount</NavLink></td>
-
-                                <td data-sortable="false">
-                                    <NavLink href=@("/categories/" + item.Name) class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Entrar</NavLink>
-                                </td>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in SubCategoryDtos)
+                            {
+                                <tr>
+
+                                    <td>@item.SubCategoryName</td>
+                                    <td><NavLink href="@($"/products/categories/{item.CategoryName}/subcategories/{item.SubCategoryName}")">@item.ProductCount</NavLink></td>
+
+                                    <td data-sortable="false">
+                                        <NavLink href="@($"/categories/{item.CategoryName}/{item.SubCategoryName}/edit")" class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</NavLink>
+
+                                    </td>
+                                </tr>
+                            }
 
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                }
+
             </div>
         </div>
 
@@ -63,7 +68,11 @@
 
 @code {
 
-    public List<ProductCategoryDto> ListCategories { get; set; } = new List<ProductCategoryDto>();
+    [Parameter]
+    public string CategoryName { get; set; }
+
+
+    IEnumerable<ProductSubCategoryDto> SubCategoryDtos;
 
     // Load the module and keep a reference to it
     // You need to use .AsTask() to convert the ValueTask to Task as it may be awaited multiple times
@@ -87,10 +96,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await CategoryService.GetAllAsync();
+        var result = await CategoryService.GetSubCategoriesAsync(CategoryName);
         if (result.IsSuccess)
         {
-            ListCategories.AddRange(result.Result);
+            SubCategoryDtos = result.Result;
         }
     }
 

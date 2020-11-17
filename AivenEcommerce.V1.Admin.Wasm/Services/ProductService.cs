@@ -26,6 +26,16 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
             return _apiClient.GetAsync<OperationResultEnumerable<ProductDto>>("api/v1/products");
         }
 
+        public Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category)
+        {
+            return _apiClient.GetAsync<OperationResultEnumerable<ProductDto>>($"api/v1/products/categories/{category}");
+        }
+
+        public Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category, string subcategory)
+        {
+            return _apiClient.GetAsync<OperationResultEnumerable<ProductDto>>($"api/v1/products/categories/{category}/subcategories/{subcategory}");
+        }
+
         public Task<OperationResult<ProductDto>> UpdateMainImageAsync(UpdateProductMainImageInput input)
         {
             return _apiClient.PutAsync<UpdateProductMainImageInput, OperationResult<ProductDto>>("api/v1/products/UpdateMainImage", input);

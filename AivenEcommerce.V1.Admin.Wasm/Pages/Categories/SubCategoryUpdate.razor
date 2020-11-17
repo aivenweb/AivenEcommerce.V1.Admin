@@ -1,0 +1,134 @@
+﻿@page "/categories/{CategoryName}/{SubCategoryName}/edit"
+
+
+@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+@inject NavigationManager NavigationManager
+@inject IProductCategoryService ProductCategoryService
+
+<div class="main-content container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Editar SubCategoria</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><NavLink href="/">Dashboard</NavLink></li>
+                        <li class="breadcrumb-item"><NavLink href="/categories">Categorias</NavLink></li>
+                        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">SubCategoria</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="form form-horizontal">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Nombre Actual</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control" disabled @bind-value="SubCategoryName">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Nombre Nuevo</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control" placeholder="Nombre" @bind="newName" @ref="inputRef">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                    <button class="@("btn icon btn-primary mr-1 mb-1 " + ((!string.IsNullOrWhiteSpace(newName)) ? string.Empty : "disabled"))" @onclick="Save"><i data-feather="edit"></i> Guardar</button>
+
+                    <NavLink href="@($"/categories/{CategoryName}")" class="btn btn-light-secondary mr-1 mb-1">Cancelar</NavLink>
+
+                    <button class="btn icon btn-danger mr-1 mb-1" @onclick="Delete"><i data-feather="x"></i> Eliminar</button>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+@code {
+    [Parameter]
+    public string CategoryName { get; set; }
+
+    [Parameter]
+    public string SubCategoryName { get; set; }
+
+    string newName = string.Empty;
+
+    ElementReference inputRef;
+
+
+    async Task Save(MouseEventArgs args)
+    {
+        var result = await ProductCategoryService.UpdateSubCategoryNameAsync(new(CategoryName, SubCategoryName, newName));
+
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo($"/categories/{CategoryName}");
+        }
+        else
+        {
+            AlertService.Show("Editar Subcategoria", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+
+    async Task Delete(MouseEventArgs args)
+    {
+        var result = await ProductCategoryService.DeleteAsync(CategoryName, SubCategoryName);
+
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo($"/categories/{CategoryName}");
+        }
+        else
+        {
+            AlertService.Show("Eliminar Subcategoria", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+        }
+        else
+        {
+            await inputRef.FocusAsync();
+        }
+    }
+}

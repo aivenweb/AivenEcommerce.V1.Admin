@@ -11,8 +11,12 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
     {
         Task<OperationResult<ProductCategoryDto>> GetAsync(string name);
         Task<OperationResultEnumerable<ProductCategoryDto>> GetAllAsync();
-        Task<OperationResult<ProductCategoryDto>> CreateAsync(string name, IEnumerable<string> subcategories);
-        Task<OperationResult<ProductCategoryDto>> UpdateAsync(Guid id, string name, IEnumerable<string> subcategories);
-        Task<OperationResult> DeleteAsync(string name);
+        Task<OperationResultEnumerable<ProductSubCategoryDto>> GetSubCategoriesAsync(string categoryName);
+        Task<OperationResult<ProductCategoryDto>> CreateAsync(CreateProductCategoryInput input);
+        Task<OperationResult<ProductCategoryDto>> UpdateAsync(UpdateProductCategoryInput input);
+        Task<OperationResult> DeleteAsync(string category);
+        Task<OperationResult> DeleteAsync(string category, string subcategory);
+        Task<OperationResult<ProductCategoryDto>> UpdateCategoryNameAsync(UpdateProductCategoryNameInput input);
+        Task<OperationResult<ProductCategoryDto>> UpdateSubCategoryNameAsync(UpdateProductSubCategoryNameInput input);
     }
 }

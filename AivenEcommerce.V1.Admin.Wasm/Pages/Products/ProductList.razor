@@ -1,4 +1,6 @@
 ﻿@page "/products"
+@page "/products/categories/{CategoryName}"
+@page "/products/categories/{CategoryName}/subcategories/{SubCategoryName}"
 @inject IJSRuntime JSRuntime
 @inject IProductService ProductService
 
@@ -79,6 +81,11 @@
 </div>
 
 @code {
+    [Parameter]
+    public string CategoryName { get; set; }
+
+    [Parameter]
+    public string SubCategoryName { get; set; }
 
     public List<ProductDto> ListProducts { get; set; } = new List<ProductDto>();
 
@@ -104,11 +111,32 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await ProductService.GetAllAsync();
-        if (result.IsSuccess)
+        if(string.IsNullOrWhiteSpace(CategoryName) && string.IsNullOrWhiteSpace(SubCategoryName))
         {
-            ListProducts.AddRange(result.Result);
+            var result = await ProductService.GetAllAsync();
+            if (result.IsSuccess)
+            {
+                ListProducts.AddRange(result.Result);
+            }
         }
+        else if (!string.IsNullOrWhiteSpace(CategoryName) && string.IsNullOrWhiteSpace(SubCategoryName))
+        {
+            var result = await ProductService.GetByCategoryAsync(CategoryName);
+            if (result.IsSuccess)
+            {
+                ListProducts.AddRange(result.Result);
+            }
+        }
+        else
+        {
+            var result = await ProductService.GetByCategoryAsync(CategoryName, SubCategoryName);
+            if (result.IsSuccess)
+            {
+                ListProducts.AddRange(result.Result);
+            }
+        }
+
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

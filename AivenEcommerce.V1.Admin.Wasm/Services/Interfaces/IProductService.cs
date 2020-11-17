@@ -9,6 +9,8 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
     public interface IProductService
     {
         Task<OperationResult<ProductDto>> GetAsync(string id);
+        Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category);
+        Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category, string subcategory);
         Task<OperationResult> DeleteAsync(string id);
         Task<OperationResultEnumerable<ProductDto>> GetAllAsync();
         Task<OperationResult<ProductDto>> UpdateCategory(UpdateProductCategorySubCategoryInput input);
