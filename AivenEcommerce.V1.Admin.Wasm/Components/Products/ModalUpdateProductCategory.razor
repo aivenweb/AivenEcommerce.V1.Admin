@@ -99,17 +99,7 @@
         category = Product.Category;
         subcategory = Product.SubCategory;
 
-        ProductCategoryService.GetAllAsync().ContinueWith(x =>
-        {
-            productCategories = x.Result.Result.Where(x => x.Name == category).Concat(x.Result.Result.Where(x => x.Name != category));
-        });
 
-        ProductCategoryService.GetAsync(category).ContinueWith(x =>
-        {
-            productCategory = x.Result.Result;
-            showSubcategory = true;
-            StateHasChanged();
-        });
     }
 
 
@@ -151,6 +141,16 @@
 
     public async Task Show()
     {
+        var resultAll = await ProductCategoryService.GetAllAsync();
+
+        productCategories = resultAll.Result.Where(x => x.Name == category).Concat(resultAll.Result.Where(x => x.Name != category));
+
+        var result = await ProductCategoryService.GetAsync(category);
+
+        productCategory = result.Result;
+        showSubcategory = true;
+        StateHasChanged();
+
         await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "updateProductCategory");
         await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-category");
         await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-subcategory");

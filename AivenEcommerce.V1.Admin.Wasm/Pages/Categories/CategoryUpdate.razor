@@ -17,7 +17,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><NavLink href="/">Dashboard</NavLink></li>
                         <li class="breadcrumb-item"><NavLink href="/categories">Categorias</NavLink></li>
-                        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+                        <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
                     </ol>
                 </nav>
             </div>
@@ -32,45 +32,75 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <div class="form form-horizontal">
-                                <div class="form-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label>Nombre Actual</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" disabled @bind-value="CategoryName">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label>Nombre Nuevo</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Nombre" @bind="newName" @ref="inputRef">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="first-name-column">Nombre Actual</label>
+                                <input type="text" class="form-control" disabled @bind-value="CategoryName" />
                             </div>
+                            <div class="form-group">
+                                <label for="first-name-column">Nombre Nuevo</label>
+                                <input type="text" id="first-name-column" class="form-control" placeholder="Nombre" autocomplete="off" name="fname-column" @bind="newName" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">SubCategorias</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="input-group mb-3" id="subcategory-input">
+                                <input type="text" class="form-control" placeholder="Agrega una subcategoria" aria-label="Recipient's username"
+                                       aria-describedby="button-addon2" @bind="subcategory">
+                                <button class="btn icon btn-primary" @onclick="AddSubCategoryOnClick"><i data-feather="plus"></i></button>
+                            </div>
+
+                            @if (newSubcategories.Any())
+                            {
+                                <div class="subcategory-list">
+                                    @foreach (var item in newSubcategories)
+                                    {
+                                        <div class="row subcategory-row">
+                                            <div class="col-6 d-flex justify-content-lg-start subcategory-name">
+                                                @item
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-lg-end subcategory-delete">
+                                                <button @onclick="(e) => RemoveSubCategoryOnClick(item, e)" class="btn icon icon-left btn-danger"><i data-feather="x"></i></button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            }
+
+                            @if (category is not null)
+                            {
+                                <div class="subcategory-list">
+                                    @foreach (var item in category.SubCategories)
+                                    {
+                                        <div class="row subcategory-row">
+                                            <div class="col-6 d-flex justify-content-lg-start subcategory-name">
+                                                @item
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            }
+
+
+
                         </div>
                     </div>
 
                 </div>
                 <div class="col-12 d-flex justify-content-end">
-                    <button class="@("btn icon btn-primary mr-1 mb-1 " + ((!string.IsNullOrWhiteSpace(newName)) ? string.Empty : "disabled"))" @onclick="Save"><i data-feather="edit"></i> Guardar</button>
-
-                    <NavLink href="@($"/categories")" class="btn btn-light-secondary mr-1 mb-1">Cancelar</NavLink>
-
-                    <button class="btn icon btn-danger mr-1 mb-1" @onclick="Delete"><i data-feather="x"></i> Eliminar</button>
-
+                    <button class="btn btn-primary mr-1 mb-1 " @onclick="Save">Guardar</button>
+                    <NavLink href="/categories" class="btn btn-light-secondary mr-1 mb-1">Cancelar</NavLink>
                 </div>
             </div>
         </div>
@@ -78,54 +108,61 @@
     </section>
 </div>
 
-
-@code {
+@code{
     [Parameter]
     public string CategoryName { get; set; }
 
     string newName = string.Empty;
+    string subcategory = string.Empty;
 
-    ElementReference inputRef;
+    List<string> newSubcategories = new List<string>();
+
+    ProductCategoryDto category = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        newName = string.Empty;
+        subcategory = string.Empty;
+
+        var result = await ProductCategoryService.GetAsync(CategoryName);
+        category = result.Result;
+    }
+
+    void AddSubCategoryOnClick(MouseEventArgs args)
+    {
+        if (!string.IsNullOrWhiteSpace(subcategory) && !newSubcategories.Any(x => x == subcategory))
+        {
+            newSubcategories.Insert(0, subcategory);
+            subcategory = string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    void RemoveSubCategoryOnClick(string subcategory, MouseEventArgs args)
+    {
+        newSubcategories = newSubcategories.Where(x => x != subcategory).ToList();
+        StateHasChanged();
+    }
 
 
     async Task Save(MouseEventArgs args)
     {
-        var result = await ProductCategoryService.UpdateCategoryNameAsync(new(CategoryName, newName));
+        string categoryname = string.IsNullOrWhiteSpace(newName) ? CategoryName : newName;
+        var result = await ProductCategoryService.UpdateAsync(new(CategoryName, categoryname, category.SubCategories.Concat(newSubcategories)));
 
         if (result.IsSuccess)
         {
-            NavigationManager.NavigateTo($"/categories");
+            NavigationManager.NavigateTo("/categories");
         }
         else
         {
-            AlertService.Show("Editar Subcategoria", result.Validations.Messages.First().Message, "danger");
-        }
-    }
-
-
-    async Task Delete(MouseEventArgs args)
-    {
-        var result = await ProductCategoryService.DeleteAsync(CategoryName);
-
-        if (result.IsSuccess)
-        {
-            NavigationManager.NavigateTo($"/categories");
-        }
-        else
-        {
-            AlertService.Show("Eliminar Subcategoria", result.Validations.Messages.First().Message, "danger");
+            AlertService.Show("Editar Categoria", result.Validations.Messages.First().Message, "danger");
         }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
-        }
-        else
-        {
-            await inputRef.FocusAsync();
-        }
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
     }
 }
