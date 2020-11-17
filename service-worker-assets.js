@@ -1625,7 +1625,7 @@
       "url": "index.html"
     },
     {
-      "hash": "sha256-09SCoCPWUPoO6xB4nTcd0XxX9tdAY+mfK\/\/semrrgAY=",
+      "hash": "sha256-X7TBMjTTP1AOWO+ormAOo62CupQj2JiBe4MgiNLnI+U=",
       "url": "manifest.json"
     },
     {
@@ -1657,7 +1657,7 @@
       "url": "_framework\/dotnet.5.0.0.js"
     },
     {
-      "hash": "sha256-Ao39reFhr6nKJm748MYAFJkQ++TmFhcm46psoXg\/CTM=",
+      "hash": "sha256-D4wUJAOPJydkEh+Wr3kOk1Mf+Ig0KwgUnRVh42ZP2Ik=",
       "url": "AivenEcommerce.V1.Admin.Wasm.styles.css"
     },
     {
@@ -1669,7 +1669,7 @@
       "url": "_framework\/Microsoft.AspNetCore.Components.dll"
     },
     {
-      "hash": "sha256-tocG6j6xdrtSUV4FcQ4jh8Ilu0J\/JSspqNbQyNlxJhM=",
+      "hash": "sha256-iKMkePzVjrg6fP8AqwBxc+Ad3fUeJ5NMoe9DcHO99bo=",
       "url": "_framework\/Microsoft.AspNetCore.Components.Web.dll"
     },
     {
@@ -1737,7 +1737,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-ejiUi8rlmr2ZQpw2daA5cm7Gs3PEoszlM8eDFOHAXBc=",
+      "hash": "sha256-cDVfrCg00vXXLEI6f45+6Zu+8Ofa6OWUngWuKcV4dqo=",
       "url": "_framework\/AivenEcommerce.V1.Admin.Wasm.dll"
     },
     {
@@ -1881,7 +1881,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-zqw6YU78+yEJdZd18YCtotiwxil3dmlCWidPmMf+MWI=",
+      "hash": "sha256-Sc1ff3vctZLjDteMEeQS+bJkjqHEIojEu75SuU+0VPw=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -1889,5 +1889,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "sdTLAQij"
+  "version": "924iGC6d"
 };
