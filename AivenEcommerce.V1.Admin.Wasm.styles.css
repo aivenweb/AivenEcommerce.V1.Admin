@@ -16,6 +16,14 @@
 .modal-dialog-scrollable .modal-body[b-4bnkonufaj] {
     height: 500px;
 }
+/* /Components/Products/ModalUpdateProductVariant.razor.rz.scp.css */
+.modal-dialog-scrollable .modal-body[b-7h7tltl08u] {
+    height: 500px;
+}
+
+#variant-values-title[b-7h7tltl08u] {
+    margin: 40px 0;
+}
 /* /Components/Products/ModalUploadProductImage.razor.rz.scp.css */
 .dropzone[b-ar455kxbjy] {
     background: white;
