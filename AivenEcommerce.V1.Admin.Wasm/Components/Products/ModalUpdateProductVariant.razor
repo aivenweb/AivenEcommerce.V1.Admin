@@ -1,0 +1,184 @@
+﻿@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+@inject IProductService ProductService
+@inject IProductVariantService ProductVariantService
+
+<div class="modal fade" id="updateProductVariant" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="updateProductVariantTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateProductVariantTitle">Editar Variantes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Variantes</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div class="position-relative">
+
+                                        <input class="form-control"
+                                               id="choices-text-unique-values"
+                                               type="text"
+                                               value="@(string.Join(",", NewVariants.Select(x => x.Name)))" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <label id="variant-values-title">Valores de las variantes</label>
+
+                        </div>
+                        @foreach (var item in NewVariants)
+                        {
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>@item.Name</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="position-relative">
+                                            <input class="form-control"
+                                                   id="choices-text-unique-values-@item.Name"
+                                                   type="text"
+                                                   value="@(string.Join(",", item.Values))" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" @onclick="Close">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="Save">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    [Parameter]
+    public ProductDto Product { get; set; }
+
+    [Parameter]
+    public IEnumerable<ProductVariantDto> Variants { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+
+    List<ProductVariantLiteDto> NewVariants = new List<ProductVariantLiteDto>();
+
+
+    async Task Save(MouseEventArgs args)
+    {
+        string[] variantNames = await GetChoiceValues();
+
+        var result = await ProductVariantService.UpdateAsync(new(Product.Id, NewVariants));
+
+        if (result.IsSuccess)
+        {
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.hideModal", "updateProductVariant").AsTask();
+            if (OnCloseCallback.HasDelegate)
+                await OnCloseCallback.InvokeAsync();
+        }
+        else
+        {
+            AlertService.Show("Editar Producto", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+    async Task Close(MouseEventArgs args)
+    {
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.clearChoice", "#choices-text-unique-values");
+
+        if (OnCloseCallback.HasDelegate)
+            await OnCloseCallback.InvokeAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        foreach (var item in NewVariants)
+        {
+            var dotNetObjRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoiceVariantValueInput", "#choices-text-unique-values-" + item.Name, item.Name, dotNetObjRef);
+        }
+    }
+
+    public async Task Show()
+    {
+        NewVariants = Variants.Select(x => new ProductVariantLiteDto(x.Name, x.Values)).ToList();
+        var dotNetObjRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "updateProductVariant");
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoiceVariantNameInput", "#choices-text-unique-values", dotNetObjRef);
+        StateHasChanged();
+    }
+
+    Task<string[]> GetChoiceValues()
+    {
+        return JSRuntime.InvokeAsync<string[]>("AivenEcommerceAdmin.getValueChoice", "#choices-text-unique-values").AsTask();
+    }
+
+    Task SetChoiceValues(string[] items)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.setValueChoice", items).AsTask();
+    }
+
+    [JSInvokable]
+    public void AddItem(string newItem)
+    {
+        if (!NewVariants.Select(x => x.Name).Contains(newItem))
+        {
+            NewVariants.Add(new(newItem, new List<string>()));
+        }
+
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void RemoveItem(string newItem)
+    {
+        NewVariants = NewVariants.Where(x => x.Name != newItem).ToList();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void AddValueItem(string variantName, string newValueItem)
+    {
+        if (!NewVariants.First(x => x.Name == variantName).Values.Contains(newValueItem))
+        {
+            int variantIndex = NewVariants.FindIndex(x => x.Name == variantName);
+
+            NewVariants[variantIndex].Values.Add(newValueItem);
+        }
+
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void RemoveValueItem(string variantName, string newValueItem)
+    {
+        int variantIndex = NewVariants.FindIndex(x => x.Name == variantName);
+
+        NewVariants[variantIndex].Values.Remove(newValueItem);
+
+        StateHasChanged();
+    }
+}

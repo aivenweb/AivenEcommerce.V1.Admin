@@ -35,8 +35,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped(sp =>
             {
                 var accessTokenHandler = sp.GetRequiredService<AivenHttpMessageHandler>();
-                accessTokenHandler.InnerHandler = new HttpClientHandler();
-                var uriHelper = sp.GetRequiredService<NavigationManager>();
+
                 return new HttpClient(accessTokenHandler)
                 {
                     BaseAddress = new Uri(builder.Configuration["ApiOptions:BaseAddress"])
@@ -48,6 +47,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductOverviewService, ProductOverviewService>();
             builder.Services.AddScoped<IProductBadgeService, ProductBadgeService>();
+            builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
 
             await builder.Build().RunAsync();
         }

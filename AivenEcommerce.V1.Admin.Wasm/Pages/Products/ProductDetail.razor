@@ -3,6 +3,7 @@
 @inject IProductImageService ProductImageService
 @inject IJSRuntime JSRuntime
 @inject IProductBadgeService ProductBadgeService
+@inject IProductVariantService ProductVariantService
 @inject AlertComponentService AlertService
 @inject NavigationManager NavigationManager
 
@@ -105,6 +106,29 @@
                         </div>
                     </div>
 
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Variantes</h4>
+                        </div>
+                        <div class="card-body">
+                            @if (ProductVariants is not null && ProductVariants.Any())
+                            {
+                                <div class="badges">
+                                    @foreach (var item in ProductVariants)
+                                    {
+                                        <span class="badge bg-secondary">@item.Name</span>
+                                    }
+
+                                </div>
+                            }
+
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary" @onclick="() => ModalUploadVariant.Show()"><i data-feather="edit"></i> Editar</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-md-4">
                     <div class="card ">
@@ -181,6 +205,8 @@
 
         <ModalUpdateProductBadge @ref="ModalUploadBadge" Product="Product" ProductBadges="ProductBadges" OnCloseCallback="CloseModalBadgeOnClick" />
 
+        <ModalUpdateProductVariant @ref="ModalUploadVariant" Product="Product" Variants="ProductVariants" OnCloseCallback="CloseModalVariantOnClick" />
+
 
     }
 </div>
@@ -192,6 +218,7 @@
     ProductDto Product { get; set; }
     IEnumerable<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
     IEnumerable<ProductBadgeName> ProductBadges { get; set; } = new List<ProductBadgeName>();
+    IEnumerable<ProductVariantDto> ProductVariants { get; set; } = new List<ProductVariantDto>();
 
     string BigImageUri { get; set; } = ImageConstants.IMAGENOTFOUND;
 
@@ -200,6 +227,7 @@
     ModalUpdateProductCategory ModalUploadCategory;
     ModalUpdateProductAvailability ModalUploadAvailability;
     ModalUpdateProductBadge ModalUploadBadge;
+    ModalUpdateProductVariant ModalUploadVariant;
 
     protected override void OnInitialized()
     {
@@ -213,6 +241,7 @@
 
         UpdateBadges();
         UpdateImages();
+        UpdateVariants();
     }
 
     void ImageOnClick(Guid productImageId)
@@ -237,6 +266,12 @@
     void CloseModalBadgeOnClick(MouseEventArgs args)
     {
         UpdateBadges();
+        UpdateProduct();
+    }
+
+    void CloseModalVariantOnClick(MouseEventArgs args)
+    {
+        UpdateVariants();
         UpdateProduct();
     }
 
@@ -296,6 +331,16 @@
         .ContinueWith(x =>
         {
             ProductBadges = x.Result.Result.Badges;
+            StateHasChanged();
+        });
+    }
+
+    void UpdateVariants()
+    {
+        ProductVariantService.GetAllAsync(ProductId)
+        .ContinueWith(x =>
+        {
+            ProductVariants = x.Result.Result;
             StateHasChanged();
         });
     }

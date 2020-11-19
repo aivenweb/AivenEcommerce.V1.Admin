@@ -19,6 +19,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Http
         {
             _spinnerService = spinnerService ?? throw new ArgumentNullException(nameof(spinnerService));
             _alertService = alertService ?? throw new ArgumentNullException(nameof(alertService));
+            InnerHandler = new HttpClientHandler();
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
