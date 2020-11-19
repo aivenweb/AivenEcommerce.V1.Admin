@@ -1,4 +1,6 @@
 ﻿@page "/googleauth"
+@inject IJSRuntime JSRuntime
+
 
 <h3>GoogleAuth</h3>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
@@ -7,4 +9,8 @@
 
 @code {
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("window.loadJS", "https://apis.google.com/js/platform.js");
+    }
 }
