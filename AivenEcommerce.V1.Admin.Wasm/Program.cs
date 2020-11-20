@@ -9,7 +9,6 @@ using AivenEcommerce.V1.Admin.Wasm.Services.ComponentServices;
 using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 using AivenEcommerce.V1.WebApi.Startup;
 
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,6 +47,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IProductOverviewService, ProductOverviewService>();
             builder.Services.AddScoped<IProductBadgeService, ProductBadgeService>();
             builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
 
             await builder.Build().RunAsync();
         }
