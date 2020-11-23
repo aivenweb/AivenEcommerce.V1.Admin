@@ -48,6 +48,8 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IProductBadgeService, ProductBadgeService>();
             builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IWishListService, WishListService>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
 
             await builder.Build().RunAsync();
         }

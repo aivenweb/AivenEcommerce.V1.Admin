@@ -190,7 +190,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button @onclick="DeleteProductOnClick" href="#" class="btn icon icon-left btn-danger"><i data-feather="trash-2"></i> Eliminar Producto</button>
+                        <button @onclick="() => QuestionModal.Show()" href="#" class="btn icon icon-left btn-danger"><i data-feather="trash-2"></i> Eliminar Producto</button>
                     </div>
                 </div>
             </div>
@@ -207,7 +207,7 @@
 
         <ModalUpdateProductVariant @ref="ModalUploadVariant" Product="Product" Variants="ProductVariants" OnCloseCallback="CloseModalVariantOnClick" />
 
-
+        <YesNoQuestionModal @ref="QuestionModal" Title="Eliminar Producto" Question="¿Desea eliminar el producto?" OnYesCallback="DeleteProductOnClick" />
     }
 </div>
 @code {
@@ -228,6 +228,7 @@
     ModalUpdateProductAvailability ModalUploadAvailability;
     ModalUpdateProductBadge ModalUploadBadge;
     ModalUpdateProductVariant ModalUploadVariant;
+    YesNoQuestionModal QuestionModal;
 
     protected override void OnInitialized()
     {

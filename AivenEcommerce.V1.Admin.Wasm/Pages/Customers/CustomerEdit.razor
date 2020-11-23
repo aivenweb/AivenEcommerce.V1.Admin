@@ -55,7 +55,7 @@
                         <div class="col-12 d-flex justify-content-end">
                             <button class="btn btn-primary mr-1 mb-1" @onclick="Save">Guardar</button>
                             <NavLink href="/customers" class="btn btn-light-secondary mr-1 mb-1">Cancelar</NavLink>
-                            <button class="btn icon btn-danger mr-1 mb-1" @onclick="Delete"><i data-feather="x"></i> Eliminar</button>
+                            <button class="btn icon btn-danger mr-1 mb-1" @onclick="() => QuestionModal.Show()"><i data-feather="x"></i> Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -64,11 +64,15 @@
 
     </section>
 </div>
+<YesNoQuestionModal @ref="QuestionModal" Title="Eliminar Cliente" Question="¿Desea eliminar el cliente?" OnYesCallback="Delete" />
+
 @code{
     [Parameter]
     public string Email { get; set; }
 
     CustomerDto customer;
+
+    YesNoQuestionModal QuestionModal;
 
     string name = string.Empty;
     string lastname = string.Empty;
