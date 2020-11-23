@@ -1737,7 +1737,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-gPoj5IFu95KPWFPqEwiscVep6Moq2EA9vkLztD6U2z0=",
+      "hash": "sha256-RPShcrREWpbs8djajZbJ9P9r43i9G7IpzS48hGP2O24=",
       "url": "_framework\/AivenEcommerce.V1.Admin.Wasm.dll"
     },
     {
@@ -1881,7 +1881,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-REeQNGA2dhX2uBiSxzQJjZo8vJ2AgTQB6u2vervvxfw=",
+      "hash": "sha256-lZ6AlGcH6fNOxg8kodqhxy3glG5GKxeV+FzvK+3vcGY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -1889,5 +1889,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "VYbNRJtb"
+  "version": "wSyvDSBw"
 };
