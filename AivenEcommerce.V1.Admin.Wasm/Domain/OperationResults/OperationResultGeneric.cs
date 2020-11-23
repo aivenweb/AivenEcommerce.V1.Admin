@@ -18,56 +18,19 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
 
         public T Result { get; set; }
 
-        public static OperationResult<T> Success(T result)
-        {
-            return new OperationResult<T>
+        public static OperationResult<T> Success(T result) =>
+            new()
             {
                 IsSuccess = true,
                 Result = result,
                 Status = HttpStatusCode.OK
             };
-        }
 
 
-        public static OperationResult<T> Fail(string message, T result) =>
 
-            new OperationResult<T>
-            {
-                Status = HttpStatusCode.BadRequest,
-                Message = message,
-                Result = result
-            };
+        public static new OperationResult<T> Fail(ValidationResult validations) =>
 
-        public static OperationResult<T> Fail(string message) =>
-
-            new OperationResult<T>
-            {
-                Status = HttpStatusCode.BadRequest,
-                Message = message,
-                Result = null
-            };
-
-        public static OperationResult<T> Error(string message, T result) =>
-
-            new OperationResult<T>
-            {
-                Status = HttpStatusCode.InternalServerError,
-                Message = message,
-                Result = result
-            };
-
-        public static OperationResult<T> Error(string message) =>
-
-            new OperationResult<T>
-            {
-                Status = HttpStatusCode.InternalServerError,
-                Message = message,
-                Result = null
-            };
-
-        public static OperationResult<T> Fail(ValidationResult validations) =>
-
-             new OperationResult<T>
+             new()
              {
                  Validations = validations,
                  Status = HttpStatusCode.BadRequest,
@@ -77,7 +40,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
 
         public static OperationResult<T> NotFound(ValidationResult validations) =>
 
-             new OperationResult<T>
+             new()
              {
                  Validations = validations,
                  Status = HttpStatusCode.NotFound,
@@ -86,7 +49,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
 
         public static OperationResult<T> NotFound() =>
 
-             new OperationResult<T>
+             new()
              {
                  Status = HttpStatusCode.NotFound,
                  IsSuccess = false

@@ -10,8 +10,6 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
 
         public bool IsSuccess { get; set; }
 
-        public string Message { get; set; }
-
         public ValidationResult Validations { get; set; }
 
         public static OperationResult Success() =>

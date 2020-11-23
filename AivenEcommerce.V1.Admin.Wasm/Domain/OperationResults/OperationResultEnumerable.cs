@@ -19,44 +19,21 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
 
         public IEnumerable<T> Result { get; set; }
 
-        public static OperationResultEnumerable<T> Success(IEnumerable<T> result)
-        {
-            return new OperationResultEnumerable<T>
+        public static OperationResultEnumerable<T> Success(IEnumerable<T> result) =>
+
+            new()
             {
                 IsSuccess = true,
                 Result = result,
                 Status = HttpStatusCode.OK
             };
-        }
+
 
         public static new OperationResultEnumerable<T> Success() => Success(default);
 
+        public static new OperationResultEnumerable<T> Fail(ValidationResult validations) =>
 
-        public static OperationResultEnumerable<T> Fail(string message, IEnumerable<T> result) =>
-
-            new OperationResultEnumerable<T>
-            {
-                Status = HttpStatusCode.BadRequest,
-                Message = message,
-                Result = result
-            };
-
-        public static OperationResultEnumerable<T> Fail(string message) => Fail(message, null);
-
-        public static OperationResultEnumerable<T> Error(string message, IEnumerable<T> result) =>
-
-            new OperationResultEnumerable<T>
-            {
-                Status = HttpStatusCode.InternalServerError,
-                Message = message,
-                Result = result
-            };
-
-        public static OperationResultEnumerable<T> Error(string message) => Error(message, null);
-
-        public static OperationResultEnumerable<T> Fail(ValidationResult validations) =>
-
-             new OperationResultEnumerable<T>
+             new()
              {
                  Validations = validations,
                  Status = HttpStatusCode.BadRequest,
@@ -64,9 +41,9 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults
              };
 
 
-        public static OperationResultEnumerable<T> Error(ValidationResult validations) =>
+        public static new OperationResultEnumerable<T> Error(ValidationResult validations) =>
 
-             new OperationResultEnumerable<T>
+             new()
              {
                  Validations = validations,
                  Status = HttpStatusCode.InternalServerError,
