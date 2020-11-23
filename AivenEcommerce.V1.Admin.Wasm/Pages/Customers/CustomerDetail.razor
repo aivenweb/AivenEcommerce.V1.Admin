@@ -1,0 +1,107 @@
+﻿@page "/customers/{email}"
+@inject ICustomerService CustomerService
+
+@inject IJSRuntime JSRuntime
+
+<div class="main-content container-fluid">
+    @if (customer is not null)
+    {
+        <div class="page-title">
+            <h3>@customer.Name @customer.LastName <NavLink href="@($"/customers/{Email}/edit/")" class="btn icon btn-outline-primary"><i data-feather="edit"></i></NavLink></h3>
+        </div>
+
+
+        <section class="section">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Información</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom:25px">
+                                <div class="col-md-4 text-center">
+                                    <div class="avatar avatar-xl"><img src="@customer.Picture.ToString()" /></div>
+                                </div>
+                                <div class="col-md-8 text-center">
+                                    @customer.Name @customer.LastName
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 text-center">
+                                @customer.Email
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Redes Sociales</h4>
+                        </div>
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Total Comprado</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <h6>Total</h6>
+                                <h1 class='text-purple'>+$2,134</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Cantidad de Compras</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <h6>Total</h6>
+                                <h1 class='text-green'>7</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+</div>
+
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public string Email { get; set; }
+
+    CustomerDto customer;
+
+    protected override void OnInitialized()
+    {
+        this.CustomerService.GetAsync(Email)
+        .ContinueWith(x =>
+        {
+            customer = x.Result.Result;
+            StateHasChanged();
+        });
+
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+    }
+}
