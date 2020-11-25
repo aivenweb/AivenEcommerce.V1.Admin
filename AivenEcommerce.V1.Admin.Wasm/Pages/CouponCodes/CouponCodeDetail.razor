@@ -1,0 +1,148 @@
+﻿@page "/couponcodes/{Code}"
+@inject IProductService ProductService
+@inject ICouponCodeService CouponCodeService
+@inject IJSRuntime JSRuntime
+@inject ICustomerService CustomerService
+@inject AlertComponentService AlertService
+@inject NavigationManager NavigationManager
+
+<div class="main-content container-fluid">
+    @if (couponCode is not null)
+    {
+        <div class="page-title">
+            <h3>@Code <NavLink href="@($"/couponcodes/{Code}/edit/")" class="btn icon btn-outline-primary"><i data-feather="edit"></i></NavLink></h3>
+        </div>
+
+
+        <section class="section">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Cupón</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Tipo</td>
+                                    @switch (couponCode.Type)
+                                    {
+                                        case CouponCodeOffType.Percentage:
+                                            <td class="text-bold-500">Porcentaje</td>
+                                            break;
+                                        case CouponCodeOffType.SpecificAmount:
+                                            <td class="text-bold-500">Monto</td>
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Valor</td>
+                                    @switch (couponCode.Type)
+                                    {
+                                        case CouponCodeOffType.Percentage:
+                                            <td class="text-bold-500">% @couponCode.Value</td>
+                                            break;
+                                        case CouponCodeOffType.SpecificAmount:
+                                            <td class="text-bold-500">$ @couponCode.Value</td>
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Redes Sociales</h4>
+                        </div>
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Veces Usado</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <h6>Ordenes</h6>
+                                <h1 class='text-purple'>8</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Cantidad de Compras</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <h6>Total</h6>
+                                <h1 class='text-green'>7</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Carrito</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom:25px">
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary"><i data-feather="plus"></i> Ver Todos</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Lista de Deseos</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom:25px">
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary"><i data-feather="plus"></i> Ver Todos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+</div>
+
+
+@code {
+    [Parameter]
+    public string Code { get; set; }
+
+    CouponCodeDto couponCode;
+
+    protected override void OnInitialized()
+    {
+        CouponCodeService.GetCouponCodeAsync(Code).ContinueWith(x =>
+        {
+            couponCode = x.Result.Result;
+            StateHasChanged();
+        });
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+    }
+
+}

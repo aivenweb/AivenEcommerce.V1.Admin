@@ -17,7 +17,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.CouponCodes
         IEnumerable<ProductCategoryPair> SubCategories,
         IEnumerable<string> Products,
         IEnumerable<string> Customers,
-        DateTime? DateStart,
+        DateTime DateStart,
         DateTime? DateExpire
         );
 }

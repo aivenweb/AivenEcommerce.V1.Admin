@@ -101,12 +101,15 @@
                 <div class="col-12 d-flex justify-content-end">
                     <button class="btn btn-primary mr-1 mb-1 " @onclick="Save">Guardar</button>
                     <NavLink href="/categories" class="btn btn-light-secondary mr-1 mb-1">Cancelar</NavLink>
+                    <button @onclick="() => QuestionModal.Show()" href="#" class="btn icon icon-left btn-danger"><i data-feather="trash-2"></i> Eliminar</button>
                 </div>
             </div>
         </div>
 
     </section>
 </div>
+
+<YesNoQuestionModal @ref="QuestionModal" Title="Eliminar Categoria" Question="Los productos quedaran inactivos ¿Desea eliminar la categoria?" OnYesCallback="Delete" />
 
 @code{
     [Parameter]
@@ -119,6 +122,7 @@
 
     ProductCategoryDto category = null;
 
+    YesNoQuestionModal QuestionModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -164,5 +168,20 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+    }
+
+    async Task Delete(MouseEventArgs args)
+    {
+        string categoryname = string.IsNullOrWhiteSpace(newName) ? CategoryName : newName;
+        var result = await ProductCategoryService.DeleteAsync(CategoryName);
+
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo("/categories");
+        }
+        else
+        {
+            AlertService.Show("Eliminar Categoria", result.Validations.Messages.First().Message, "danger");
+        }
     }
 }

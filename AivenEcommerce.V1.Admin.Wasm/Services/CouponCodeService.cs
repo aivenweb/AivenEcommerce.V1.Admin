@@ -38,7 +38,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
 
         public Task<OperationResult<CouponCodeDto>> UpdateCouponCodeAsync(UpdateCouponCodeInput input)
         {
-            return _apiClient.PostAsync<UpdateCouponCodeInput, OperationResult<CouponCodeDto>>("api/v1/CouponCodes", input);
+            return _apiClient.PutAsync<UpdateCouponCodeInput, OperationResult<CouponCodeDto>>("api/v1/CouponCodes", input);
         }
     }
 }
