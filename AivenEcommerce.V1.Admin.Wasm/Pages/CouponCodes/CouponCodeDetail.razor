@@ -56,10 +56,19 @@
                     </div>
                     <div class="card ">
                         <div class="card-header">
-                            <h4>Redes Sociales</h4>
+                            <h4>Min/Max</h4>
                         </div>
                         <div class="card-body">
-
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Monto Minimo</td>
+                                    <td class="text-bold-500">@couponCode.MinAmount</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Monto Máximo</td>
+                                    <td class="text-bold-500">@(couponCode.MaxAmount.HasValue ? couponCode.MaxAmount.Value: "No hay limite de compra")</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
