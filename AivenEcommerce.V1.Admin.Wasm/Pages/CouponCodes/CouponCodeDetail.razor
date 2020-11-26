@@ -62,11 +62,29 @@
                             <table class='table table-borderless'>
                                 <tr>
                                     <td class="text-bold-500">Monto Minimo</td>
-                                    <td class="text-bold-500">@couponCode.MinAmount</td>
+                                    <td class="text-bold-500">$ @couponCode.MinAmount</td>
                                 </tr>
                                 <tr>
                                     <td class="text-bold-500">Monto Máximo</td>
-                                    <td class="text-bold-500">@(couponCode.MaxAmount.HasValue ? couponCode.MaxAmount.Value: "No hay limite de compra")</td>
+                                    <td class="text-bold-500">@(couponCode.MaxAmount.HasValue ? $"$ {couponCode.MaxAmount.Value}": "No hay limite de compra")</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Expiración</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Fecha de Inicio</td>
+                                    <td class="text-bold-500">@couponCode.DateStart.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Fecha de Expiración</td>
+                                    <td class="text-bold-500">@(couponCode.DateExpire.HasValue ? couponCode.DateExpire.Value.ToString("dd/MM/yyyy") : "No tiene expiración.")</td>
                                 </tr>
                             </table>
                         </div>
@@ -82,6 +100,60 @@
                             <div class="text-center mb-5">
                                 <h6>Ordenes</h6>
                                 <h1 class='text-purple'>8</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>Categorias</h4>
+                        </div>
+                        <div class="card-body">
+                            @if (couponCode.Categories is not null && couponCode.Categories.Any())
+                            {
+                                <div class="badges">
+                                    @foreach (var item in couponCode.Categories)
+                                    {
+                                        <span class="badge bg-warning">@item</span>
+                                    }
+
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-bold-500">No se filtran Categorias.</p>
+                            }
+
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-header">
+                            <h4>SubCategorias</h4>
+                        </div>
+                        <div class="card-body">
+                            @if (couponCode.SubCategories is not null && couponCode.SubCategories.Any())
+                            {
+                                <div class="badges">
+                                    @foreach (var item in couponCode.SubCategories)
+                                    {
+                                        <span class="badge bg-warning">@($"{item.Category} - {item.SubCategory}")</span>
+                                    }
+
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-bold-500">No se filtran SubCategorias.</p>
+                            }
+
+
+                            <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -101,28 +173,54 @@
                     </div>
                     <div class="card ">
                         <div class="card-header">
-                            <h4>Carrito</h4>
+                            <h4>Clientes</h4>
                         </div>
                         <div class="card-body">
-                            <div class="row" style="padding-bottom:25px">
+                            @if (couponCode.Customers is not null && couponCode.Customers.Any())
+                            {
+                                <div class="badges">
+                                    @foreach (var item in couponCode.Customers)
+                                    {
+                                        <span class="badge bg-warning">@item</span>
+                                    }
 
-                            </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-bold-500">No se filtran Clientes.</p>
+                            }
+
+
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="plus"></i> Ver Todos</button>
+                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="card ">
                         <div class="card-header">
-                            <h4>Lista de Deseos</h4>
+                            <h4>Productos</h4>
                         </div>
                         <div class="card-body">
-                            <div class="row" style="padding-bottom:25px">
+                            @if (couponCode.Products is not null && couponCode.Products.Any())
+                            {
+                                <div class="badges">
+                                    @foreach (var item in couponCode.Products)
+                                    {
+                                        <span class="badge bg-warning">@item</span>
+                                    }
 
-                            </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-bold-500">No se filtran Productos.</p>
+                            }
+
+
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="plus"></i> Ver Todos</button>
+                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
