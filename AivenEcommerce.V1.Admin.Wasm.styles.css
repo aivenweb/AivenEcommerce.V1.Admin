@@ -12,6 +12,22 @@
     align-items: center;
     background: #01060e00;
 }
+/* /Components/CouponCodes/ModalUpdateCouponCodeCategory.razor.rz.scp.css */
+.modal-dialog-scrollable .modal-body[b-5w8pl7bt9a] {
+    height: 500px;
+}
+/* /Components/CouponCodes/ModalUpdateCouponCodeCustomer.razor.rz.scp.css */
+.modal-dialog-scrollable .modal-body[b-tcu435xtk3] {
+    height: 500px;
+}
+/* /Components/CouponCodes/ModalUpdateCouponCodeProduct.razor.rz.scp.css */
+.modal-dialog-scrollable .modal-body[b-7u03zfov7y] {
+    height: 500px;
+}
+/* /Components/CouponCodes/ModalUpdateCouponCodeSubCategory.razor.rz.scp.css */
+.modal-dialog-scrollable .modal-body[b-r0ltxgniqx] {
+    height: 500px;
+}
 /* /Components/Products/ModalUpdateProductCategory.razor.rz.scp.css */
 .modal-dialog-scrollable .modal-body[b-4bnkonufaj] {
     height: 500px;

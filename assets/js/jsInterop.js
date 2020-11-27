@@ -131,6 +131,55 @@
 
 
     },
+    createChoiceCouponCodeCustomerInput: function (selector, dotNetObjRef) {
+        this.createChoiceCouponCodeCategoryInput(selector, dotNetObjRef);
+    },
+    createChoiceCouponCodeProductInput: function (selector, dotNetObjRef) {
+        this.createChoiceCouponCodeCategoryInput(selector, dotNetObjRef);
+    },
+    createChoiceCouponCodeSubCategoryInput: function (selector, dotNetObjRef) {
+        this.createChoiceCouponCodeCategoryInput(selector, dotNetObjRef);
+    },
+    createChoiceCouponCodeCategoryInput: function (selector, dotNetObjRef) {
+        const element = document.querySelector(selector);
+
+        element.addEventListener(
+            'addItem',
+            function (event) {
+                dotNetObjRef.invokeMethodAsync("AddItem", event.detail.value);
+            },
+            false,
+        );
+
+        element.addEventListener(
+            'removeItem',
+            function (event) {
+                dotNetObjRef.invokeMethodAsync("RemoveItem", event.detail.value);
+            },
+            false,
+        );
+
+        const choices = new Choices(element,
+            {
+                paste: false,
+                duplicateItemsAllowed: false,
+                editItems: true,
+                duplicateItemsAllowed: false,
+                placeholder: true,
+                loadingText: 'Cargando...',
+                noResultsText: 'No se encuentra',
+                noChoicesText: 'Vacio',
+                itemSelectText: 'Selecciona',
+                addItemText: (value) => {
+                    return `Agregar <b>"${value}"</b>`;
+                },
+                valueComparer: (value1, value2) => {
+                    return value1 === value2;
+                },
+            });
+
+
+    },
     getValueChoice: function (selector) {
         const choices = new Choices(selector);
         return choices.getValue(true);
