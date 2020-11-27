@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.Products;
 using AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults;
+using AivenEcommerce.V1.Admin.Wasm.Domain.Paginations;
 using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services
@@ -21,9 +22,9 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
             return _apiClient.GetAsync<OperationResult<ProductDto>>("api/v1/products/" + id);
         }
 
-        public Task<OperationResultEnumerable<ProductDto>> GetAllAsync()
+        public Task<OperationResult<PagedResult<ProductDto>>> GetAllAsync()
         {
-            return _apiClient.GetAsync<OperationResultEnumerable<ProductDto>>("api/v1/products");
+            return _apiClient.GetAsync<OperationResult<PagedResult<ProductDto>>>("api/v1/products");
         }
 
         public Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category)

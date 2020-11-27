@@ -33,7 +33,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
 
         public Task<OperationResult> RemoveCouponCodeAsync(RemoveCouponCodeInput input)
         {
-            return _apiClient.GetAsync<OperationResult>($"api/v1/CouponCodes/{input.Code}");
+            return _apiClient.DeleteAsync<OperationResult>($"api/v1/CouponCodes/{input.Code}");
         }
 
         public Task<OperationResult<CouponCodeDto>> UpdateCouponCodeAsync(UpdateCouponCodeInput input)

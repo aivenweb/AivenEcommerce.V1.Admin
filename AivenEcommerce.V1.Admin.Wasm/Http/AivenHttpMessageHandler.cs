@@ -25,13 +25,12 @@ namespace AivenEcommerce.V1.Admin.Wasm.Http
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             _spinnerService.Show();
-
             try
             {
                 var response = await base.SendAsync(request, cancellationToken);
                 return response;
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 _alertService.Show("Ocurrio un error inexperado.", "No se pudo realizar la operación. Vuelva a intentarlo más tarde.", "danger");
 

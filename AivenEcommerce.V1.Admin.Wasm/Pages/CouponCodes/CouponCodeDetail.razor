@@ -1,5 +1,6 @@
 ﻿@page "/couponcodes/{Code}"
 @inject IProductService ProductService
+@inject IProductCategoryService ProductCategoryService
 @inject ICouponCodeService CouponCodeService
 @inject IJSRuntime JSRuntime
 @inject ICustomerService CustomerService
@@ -126,7 +127,7 @@
 
 
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="() => modalUpdateCouponCodeCategory.Show()"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -153,7 +154,7 @@
 
 
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="() => modalUpdateCouponCodeSubCategory.Show()"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -193,7 +194,7 @@
 
 
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="() => modalUpdateCouponCodeCustomer.Show()"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -203,10 +204,10 @@
                             <h4>Productos</h4>
                         </div>
                         <div class="card-body">
-                            @if (couponCode.Products is not null && couponCode.Products.Any())
+                            @if (couponCode.Products is not null && couponCode.Products.Any() && products is not null)
                             {
                                 <div class="badges">
-                                    @foreach (var item in couponCode.Products)
+                                    @foreach (var item in products.Where(x => couponCode.Products.Contains(x.Id)).Select(x => x.Name))
                                     {
                                         <span class="badge bg-warning">@item</span>
                                     }
@@ -220,7 +221,7 @@
 
 
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="() => modalUpdateCouponCodeProduct.Show()"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                     </div>
@@ -231,6 +232,11 @@
 
 </div>
 
+<ModalUpdateCouponCodeCategory @ref="modalUpdateCouponCodeCategory" Categories="categories" CouponCode="couponCode" OnCloseCallback="CloseModalOnClick" />
+<ModalUpdateCouponCodeCustomer @ref="modalUpdateCouponCodeCustomer" Customers="customers" CouponCode="couponCode" OnCloseCallback="CloseModalOnClick" />
+<ModalUpdateCouponCodeProduct @ref="modalUpdateCouponCodeProduct" Products="products" CouponCode="couponCode" OnCloseCallback="CloseModalOnClick" />
+<ModalUpdateCouponCodeSubCategory @ref="modalUpdateCouponCodeSubCategory" Categories="categories" CouponCode="couponCode" OnCloseCallback="CloseModalOnClick" />
+
 
 @code {
     [Parameter]
@@ -238,7 +244,54 @@
 
     CouponCodeDto couponCode;
 
+    IEnumerable<ProductCategoryDto> categories;
+    IEnumerable<CustomerDto> customers;
+    IEnumerable<ProductDto> products;
+
+    ModalUpdateCouponCodeCategory modalUpdateCouponCodeCategory;
+    ModalUpdateCouponCodeCustomer modalUpdateCouponCodeCustomer;
+    ModalUpdateCouponCodeProduct modalUpdateCouponCodeProduct;
+    ModalUpdateCouponCodeSubCategory modalUpdateCouponCodeSubCategory;
+
     protected override void OnInitialized()
+    {
+        UpdateCouponCode();
+        UpdateCategories();
+        UpdateCustomers();
+        UpdateProducts();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+    }
+
+    void CloseModalOnClick(MouseEventArgs args)
+    {
+        UpdateCouponCode();
+    }
+
+    private void UpdateCategories()
+    {
+        ProductCategoryService.GetAllAsync()
+            .ContinueWith(x =>
+            {
+                categories = x.Result.Result;
+                StateHasChanged();
+            });
+    }
+
+    private void UpdateCustomers()
+    {
+        CustomerService.GetAllAsync()
+            .ContinueWith(x =>
+            {
+                customers = x.Result.Result;
+                StateHasChanged();
+            });
+    }
+
+    private void UpdateCouponCode()
     {
         CouponCodeService.GetCouponCodeAsync(Code).ContinueWith(x =>
         {
@@ -247,9 +300,13 @@
         });
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    private void UpdateProducts()
     {
-        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
+        ProductService.GetAllAsync().ContinueWith(x =>
+        {
+            products = x.Result.Result.Items;
+            StateHasChanged();
+        });
     }
 
 }

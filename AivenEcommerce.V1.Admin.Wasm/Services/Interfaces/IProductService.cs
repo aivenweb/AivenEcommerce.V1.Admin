@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.Products;
 using AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults;
+using AivenEcommerce.V1.Admin.Wasm.Domain.Paginations;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
 {
@@ -12,7 +12,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
         Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category);
         Task<OperationResultEnumerable<ProductDto>> GetByCategoryAsync(string category, string subcategory);
         Task<OperationResult> DeleteAsync(string id);
-        Task<OperationResultEnumerable<ProductDto>> GetAllAsync();
+        Task<OperationResult<PagedResult<ProductDto>>> GetAllAsync();
         Task<OperationResult<ProductDto>> UpdateCategory(UpdateProductCategorySubCategoryInput input);
         Task<OperationResult<ProductDto>> CreateProduct(CreateProductInput input);
         Task<OperationResult<ProductDto>> UpdateMainImageAsync(UpdateProductMainImageInput input);

@@ -116,7 +116,7 @@
             var result = await ProductService.GetAllAsync();
             if (result.IsSuccess)
             {
-                ListProducts.AddRange(result.Result);
+                ListProducts.AddRange(result.Result.Items);
             }
         }
         else if (!string.IsNullOrWhiteSpace(CategoryName) && string.IsNullOrWhiteSpace(SubCategoryName))

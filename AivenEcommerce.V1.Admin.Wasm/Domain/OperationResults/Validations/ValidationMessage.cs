@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults.Validations
+﻿namespace AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults.Validations
 {
     public class ValidationMessage
     {

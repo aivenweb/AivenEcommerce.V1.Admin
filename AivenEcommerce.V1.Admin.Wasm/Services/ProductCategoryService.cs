@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.ProductCategories;

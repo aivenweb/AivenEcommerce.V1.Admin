@@ -1,0 +1,164 @@
+﻿@inject IJSRuntime JSRuntime
+@inject AlertComponentService AlertService
+@inject ICouponCodeService CouponCodeService
+
+<div class="modal fade" id="updateCouponCodeSubCategory" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="updateCouponCodeSubCategoryTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateCouponCodeSubCategoryTitle">Editar Categorias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Categorias</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+
+                                    <select id="choices-couponcode-subcategories-update" class="choices form-select select-light-danger" multiple="multiple">
+                                        @if (Categories is not null)
+                                        {
+
+                                            var groups = Categories.GroupBy(x => x.Name);
+
+                                            foreach (var group in groups)
+                                            {
+                                                foreach (var category in group)
+                                                {
+                                                    <optgroup label="@category.Name">
+                                                        @foreach (var subcategory in category.SubCategories)
+                                                        {
+                                                            <option value="@($"{category.Name}:{subcategory}")" selected="@(CouponCode.SubCategories?.Contains(ItemToCategoryPair($"{category.Name}:{subcategory}")) ?? false)">@subcategory</option>
+                                                        }
+                                                    </optgroup>
+                                                }
+                                            }
+
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" @onclick="Close">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="Save">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    [Parameter]
+    public CouponCodeDto CouponCode { get; set; }
+
+    [Parameter]
+    public IEnumerable<ProductCategoryDto> Categories { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+
+    List<ProductCategoryPair> NewSubCategories = new List<ProductCategoryPair>();
+    List<ProductCategoryPair> SubCategories = new List<ProductCategoryPair>();
+
+    async Task Save(MouseEventArgs args)
+    {
+        string[] variantNames = await GetChoiceValues();
+
+        var result = await CouponCodeService.UpdateCouponCodeAsync(new(CouponCode.Id, CouponCode.Code, CouponCode.Type, CouponCode.Value, CouponCode.MinAmount, CouponCode.MaxAmount, CouponCode.Categories, NewSubCategories, CouponCode.Products, CouponCode.Customers, CouponCode.DateStart, CouponCode.DateExpire));
+
+        if (result.IsSuccess)
+        {
+            await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.hideModal", "updateCouponCodeSubCategory").AsTask();
+            if (OnCloseCallback.HasDelegate)
+                await OnCloseCallback.InvokeAsync();
+        }
+        else
+        {
+            AlertService.Show("Editar Cupón", result.Validations.Messages.First().Message, "danger");
+        }
+    }
+
+    async Task Close(MouseEventArgs args)
+    {
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.clearChoice", "#choices-couponcode-subcategories-update");
+
+        if (OnCloseCallback.HasDelegate)
+            await OnCloseCallback.InvokeAsync();
+    }
+
+    public async Task Show()
+    {
+        var groups = Categories.GroupBy(x => x.Name);
+
+        foreach (var group in groups)
+        {
+            foreach (var category in group)
+            {
+                foreach (var subcategory in category.SubCategories)
+                {
+                    SubCategories.Add(new(category.Name, subcategory));
+                }
+            }
+        }
+
+        NewSubCategories = CouponCode.SubCategories?.ToList() ?? new();
+        var dotNetObjRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "updateCouponCodeSubCategory");
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoiceCouponCodeSubCategoryInput", "#choices-couponcode-subcategories-update", dotNetObjRef);
+        StateHasChanged();
+    }
+
+    Task<string[]> GetChoiceValues()
+    {
+        return JSRuntime.InvokeAsync<string[]>("AivenEcommerceAdmin.getValueChoice", "#choices-couponcode-subcategories-update").AsTask();
+    }
+
+    Task SetChoiceValues(string[] items)
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.setValueChoice", items).AsTask();
+    }
+
+    [JSInvokable]
+    public void AddItem(string newItem)
+    {
+        var pair = ItemToCategoryPair(newItem);
+        if (!NewSubCategories.Contains(pair))
+        {
+            NewSubCategories.Add(pair);
+        }
+
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void RemoveItem(string newItem)
+    {
+        var pair = ItemToCategoryPair(newItem);
+        NewSubCategories = NewSubCategories.Where(x => x != pair).ToList();
+        StateHasChanged();
+    }
+
+    ProductCategoryPair ItemToCategoryPair(string item)
+    {
+        var array = item.Split(':');
+        return new(array[0], array[1]);
+    }
+}
