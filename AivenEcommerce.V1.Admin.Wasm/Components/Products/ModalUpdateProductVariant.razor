@@ -73,7 +73,6 @@
 </div>
 
 @code{
-
     [Parameter]
     public ProductDto Product { get; set; }
 
@@ -166,7 +165,7 @@
         {
             int variantIndex = NewVariants.FindIndex(x => x.Name == variantName);
 
-            NewVariants[variantIndex].Values.Add(newValueItem);
+            NewVariants[variantIndex] = NewVariants[variantIndex] with { Values = NewVariants[variantIndex].Values.Concat(new[] { newValueItem }) };
         }
 
         StateHasChanged();
@@ -177,7 +176,7 @@
     {
         int variantIndex = NewVariants.FindIndex(x => x.Name == variantName);
 
-        NewVariants[variantIndex].Values.Remove(newValueItem);
+        NewVariants[variantIndex] = NewVariants[variantIndex] with { Values = NewVariants[variantIndex].Values.Where(x => x != newValueItem) };
 
         StateHasChanged();
     }

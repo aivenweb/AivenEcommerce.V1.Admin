@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
-using AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.ProductVariants;
-using AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults;
+using AivenEcommerce.V1.Domain.Shared.Dtos.ProductVariants;
+using AivenEcommerce.V1.Domain.Shared.OperationResults;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
 {

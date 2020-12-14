@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults;
+using AivenEcommerce.V1.Domain.Shared.OperationResults;
 using AivenEcommerce.V1.Admin.Wasm.Extensions;
 using AivenEcommerce.V1.Admin.Wasm.Services.ComponentServices;
 

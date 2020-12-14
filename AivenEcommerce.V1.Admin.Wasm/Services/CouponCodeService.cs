@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using AivenEcommerce.V1.Admin.Wasm.Domain.Dtos.CouponCodes;
-using AivenEcommerce.V1.Admin.Wasm.Domain.OperationResults;
+using AivenEcommerce.V1.Domain.Shared.Dtos.CouponCodes;
+using AivenEcommerce.V1.Domain.Shared.OperationResults;
 using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services
