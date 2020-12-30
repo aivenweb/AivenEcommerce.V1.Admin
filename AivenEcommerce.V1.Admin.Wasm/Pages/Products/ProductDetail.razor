@@ -1,6 +1,7 @@
 ﻿@page "/products/{ProductId}"
 @inject IProductService ProductService
 @inject IProductImageService ProductImageService
+@inject ISaleService SaleService
 @inject IJSRuntime JSRuntime
 @inject IProductBadgeService ProductBadgeService
 @inject IProductVariantService ProductVariantService
@@ -138,7 +139,13 @@
                         <div class="card-body">
                             <div class="text-center mb-5">
                                 <h6>En el último mes</h6>
-                                <h1 class='text-green'>+$2,134</h1>
+
+                                @if (SaleProduct is not null)
+                                {
+                                    <h1 class='text-green'>@("+$" + SaleProduct.Earnings)</h1>
+                                }
+
+
                             </div>
                         </div>
                     </div>
@@ -211,7 +218,6 @@
     }
 </div>
 @code {
-
     [Parameter]
     public string ProductId { get; set; }
 
@@ -219,7 +225,7 @@
     IEnumerable<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
     IEnumerable<ProductBadgeName> ProductBadges { get; set; } = new List<ProductBadgeName>();
     IEnumerable<ProductVariantDto> ProductVariants { get; set; } = new List<ProductVariantDto>();
-
+    SaleProductDto SaleProduct { get; set; }
     string BigImageUri { get; set; } = ImageConstants.IMAGENOTFOUND;
 
     ModalUpdateProductCostPrice ModalUploadCostPrice;
@@ -233,16 +239,17 @@
     protected override void OnInitialized()
     {
         this.ProductService.GetAsync(ProductId)
-        .ContinueWith(x =>
-        {
-            Product = x.Result.Result;
-            BigImageUri = Product.Thumbnail.ToString();
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    Product = x.Result.Result;
+                    BigImageUri = Product.Thumbnail.ToString();
+                    StateHasChanged();
+                });
 
         UpdateBadges();
         UpdateImages();
         UpdateVariants();
+        UpdateEarnings();
     }
 
     void ImageOnClick(Guid productImageId)
@@ -250,12 +257,12 @@
         var imageUri = ProductImages.Single(x => x.Id == productImageId).Image;
 
         this.ProductService.UpdateMainImageAsync(new(ProductId, imageUri))
-        .ContinueWith(x =>
-        {
-            Product = x.Result.Result;
-            BigImageUri = Product.Thumbnail.ToString();
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    Product = x.Result.Result;
+                    BigImageUri = Product.Thumbnail.ToString();
+                    StateHasChanged();
+                });
 
     }
 
@@ -309,42 +316,53 @@
     void UpdateImages()
     {
         var productImageTask = this.ProductImageService.GetAllAsync(ProductId)
-        .ContinueWith(x =>
-        {
-            ProductImages = x.Result.Result;
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    ProductImages = x.Result.Result;
+                    StateHasChanged();
+                });
     }
 
     void UpdateProduct()
     {
         var productTask = this.ProductService.GetAsync(ProductId)
-        .ContinueWith(x =>
-        {
-            Product = x.Result.Result;
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    Product = x.Result.Result;
+                    StateHasChanged();
+                });
     }
 
     void UpdateBadges()
     {
         ProductBadgeService.GetByProductAsync(ProductId)
-        .ContinueWith(x =>
-        {
-            ProductBadges = x.Result.Result.Badges;
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    ProductBadges = x.Result.Result.Badges;
+                    StateHasChanged();
+                });
     }
 
     void UpdateVariants()
     {
         ProductVariantService.GetAllAsync(ProductId)
-        .ContinueWith(x =>
-        {
-            ProductVariants = x.Result.Result;
-            StateHasChanged();
-        });
+                    .ContinueWith(x =>
+                    {
+                    ProductVariants = x.Result.Result;
+                    StateHasChanged();
+                });
     }
+
+    void UpdateEarnings()
+    {
+        SaleService.GetEarningsByProductAsync(ProductId)
+                    .ContinueWith(x =>
+                    {
+                    SaleProduct = x.Result.Result;
+                    StateHasChanged();
+                });
+    }
+
 
     Task EditCostPriceOnClick()
     {
