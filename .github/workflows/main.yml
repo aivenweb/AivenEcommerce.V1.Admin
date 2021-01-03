@@ -18,9 +18,9 @@ jobs:
       uses: actions/setup-dotnet@v1.7.2
       with:
         dotnet-version: 5.0.100
-        source-url: https://nuget.pkg.github.com/aivenweb/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#        source-url: https://nuget.pkg.github.com/aivenweb/index.json
+#      env:
+#        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
