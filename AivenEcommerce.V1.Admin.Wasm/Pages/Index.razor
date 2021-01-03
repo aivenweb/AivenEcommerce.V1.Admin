@@ -35,9 +35,9 @@
                         <div class="card-body p-0">
                             <div class="d-flex flex-column">
                                 <div class='px-3 py-3 d-flex justify-content-between'>
-                                    <h3 class='card-title'>Ingresos</h3>
+                                    <h3 class='card-title'>Ventas Promedio</h3>
                                     <div class="card-right d-flex align-items-center">
-                                        <p>$@DashboardDto.Charts.Earnings.Value</p>
+                                        <p>$@DashboardDto.Charts.AverageSales.Value</p>
                                     </div>
                                 </div>
                                 <div class="chart-wrapper">
@@ -133,72 +133,43 @@
                                             <th>Cantidad</th>
                                             <th>Dirección</th>
                                             <th>Estado</th>
+                                            <th>Ver Más</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Graiden</td>
-                                            <td>vehicula.aliquet@semconsequat.co.uk</td>
-                                            <td>076 4820 8838</td>
-                                            <td>Offenburg</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dale</td>
-                                            <td>fringilla.euismod.enim@quam.ca</td>
-                                            <td>0500 527693</td>
-                                            <td>New Quay</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Nathaniel</td>
-                                            <td>mi.Duis@diam.edu</td>
-                                            <td>(012165) 76278</td>
-                                            <td>Grumo Appula</td>
-                                            <td>
-                                                <span class="badge bg-danger">Inactive</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Darius</td>
-                                            <td>velit@nec.com</td>
-                                            <td>0309 690 7871</td>
-                                            <td>Ways</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ganteng</td>
-                                            <td>velit@nec.com</td>
-                                            <td>0309 690 7871</td>
-                                            <td>Ways</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Oleg</td>
-                                            <td>rhoncus.id@Aliquamauctorvelit.net</td>
-                                            <td>0500 441046</td>
-                                            <td>Rossignol</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Kermit</td>
-                                            <td>diam.Sed.diam@anteVivamusnon.org</td>
-                                            <td>(01653) 27844</td>
-                                            <td>Patna</td>
-                                            <td>
-                                                <span class="badge bg-success">Active</span>
-                                            </td>
-                                        </tr>
+
+                                        @foreach (var delivery in DashboardDto.Deliveries)
+                                        {
+                                            <tr>
+                                                <td>@delivery.Name</td>
+                                                <td>@delivery.Email</td>
+                                                <td>$@delivery.Amount</td>
+                                                <td>@delivery.Address</td>
+                                                <td>
+                                                    @switch (delivery.Status)
+                                                    {
+                                                        case DeliveryStatus.Delivered:
+                                                            <span class="badge bg-success">Entregado</span>
+                                                            break;
+                                                        case DeliveryStatus.NoAddressFound:
+                                                        case DeliveryStatus.ProductIncident:
+                                                        case DeliveryStatus.IncorrectCode:
+                                                        case DeliveryStatus.BuyerNotFound:
+                                                            <span class="badge bg-danger">Problema</span>
+                                                            break;
+                                                        case DeliveryStatus.Created:
+                                                        case DeliveryStatus.Pending:
+                                                        case DeliveryStatus.Going:
+                                                            <span class="badge bg-warning">Pendiente</span>
+                                                            break;
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    <NavLink href=@("/Products/") class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Entrar</NavLink>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -221,61 +192,61 @@
                     <div class="card widget-todo">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                             <h4 class="card-title d-flex">
-                                <i class='bx bx-check font-medium-5 pl-25 pr-75'></i>Progress
+                                <i class='bx bx-check font-medium-5 pl-25 pr-75'></i>Rendimiento
                             </h4>
 
                         </div>
                         <div class="card-body px-0 py-1">
                             <table class='table table-borderless'>
                                 <tr>
-                                    <td class='col-3'>UI Design</td>
+                                    <td class='col-3'>Clientes que hayan comprado</td>
                                     <td class='col-6'>
                                         <div class="progress progress-info">
-                                            <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="0"
+                                            <div id="kpi-customer-sales-completes" class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="0"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
-                                    <td class='col-3 text-center'>60%</td>
+                                    <td id="kpi-txt-customer-sales-completes" class='col-3 text-center'>0%</td>
                                 </tr>
                                 <tr>
-                                    <td class='col-3'>VueJS</td>
+                                    <td class='col-3'>Clientes con Carritos</td>
                                     <td class='col-6'>
                                         <div class="progress progress-success">
-                                            <div class="progress-bar" role="progressbar" style="width: 35%" aria-valuenow="0"
+                                            <div id="kpi-customer-baskets" class="progress-bar" role="progressbar" style="width: 35%" aria-valuenow="0"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
-                                    <td class='col-3 text-center'>30%</td>
+                                    <td id="kpi-txt-customer-baskets" class='col-3 text-center'>0%</td>
                                 </tr>
                                 <tr>
-                                    <td class='col-3'>Laravel</td>
+                                    <td class='col-3'>Ventas Incompletas</td>
                                     <td class='col-6'>
                                         <div class="progress progress-danger">
-                                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="0"
+                                            <div id="kpi-sales-incompletes" class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="0"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
-                                    <td class='col-3 text-center'>50%</td>
+                                    <td id="kpi-txt-sales-incompletes" class='col-3 text-center'>0%</td>
                                 </tr>
                                 <tr>
-                                    <td class='col-3'>ReactJS</td>
+                                    <td class='col-3'>Clientes con Ventas Incompletas</td>
                                     <td class='col-6'>
                                         <div class="progress progress-primary">
-                                            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="0"
+                                            <div id="kpi-customer-sales-incompletes" class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="0"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
-                                    <td class='col-3 text-center'>80%</td>
+                                    <td id="kpi-txt-customer-sales-incompletes" class='col-3 text-center'>0%</td>
                                 </tr>
                                 <tr>
-                                    <td class='col-3'>Go</td>
+                                    <td class='col-3'>Ventas con Cupones</td>
                                     <td class='col-6'>
                                         <div class="progress progress-secondary">
-                                            <div class="progress-bar" role="progressbar" style="width: 65%" aria-valuenow="0"
+                                            <div id="kpi-sales-coupons" class="progress-bar" role="progressbar" aria-valuenow="0"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </td>
-                                    <td class='col-3 text-center'>65%</td>
+                                    <td id="kpi-txt-sales-coupons" class='col-3 text-center'>0%</td>
                                 </tr>
                             </table>
                         </div>
