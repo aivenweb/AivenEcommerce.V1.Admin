@@ -1,4 +1,9 @@
-export function dashboard() {
+export function dashboard(dashboard, months) {
+    console.log(dashboard)
+    console.log(months)
+
+    let monthLabels = Object.getOwnPropertyNames(dashboard.charts.customer.chartValues)
+
     var chartColors = {
         red: 'rgb(255, 99, 132)',
         orange: 'rgb(255, 159, 64)',
@@ -13,13 +18,13 @@ export function dashboard() {
     var config1 = {
         type: "line",
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: monthLabels,
             datasets: [
                 {
-                    label: "Balance",
+                    label: "Clientes",
                     backgroundColor: "#fff",
                     borderColor: "#fff",
-                    data: [20, 40, 20, 70, 10, 50, 20],
+                    data: monthLabels.map(m => dashboard.charts.customer.chartValues[m]),
                     fill: false,
                     pointBorderWidth: 100,
                     pointBorderColor: "transparent",
@@ -81,13 +86,13 @@ export function dashboard() {
     var config2 = {
         type: "line",
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: monthLabels,
             datasets: [
                 {
-                    label: "Revenue",
+                    label: "Ingresos",
                     backgroundColor: "#fff",
                     borderColor: "#fff",
-                    data: [20, 800, 300, 400, 10, 50, 20],
+                    data: monthLabels.map(m => dashboard.charts.earnings.chartValues[m]),
                     fill: false,
                     pointBorderWidth: 100,
                     pointBorderColor: "transparent",
@@ -149,13 +154,13 @@ export function dashboard() {
     var config3 = {
         type: "line",
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: monthLabels,
             datasets: [
                 {
-                    label: "Orders",
+                    label: "Ordenes",
                     backgroundColor: "#fff",
                     borderColor: "#fff",
-                    data: [20, 40, 20, 200, 10, 540, 723],
+                    data: monthLabels.map(m => dashboard.charts.order.chartValues[m]),
                     fill: false,
                     pointBorderWidth: 100,
                     pointBorderColor: "transparent",
@@ -218,13 +223,13 @@ export function dashboard() {
     var config4 = {
         type: "line",
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: monthLabels,
             datasets: [
                 {
-                    label: "My First dataset",
+                    label: "Ventas",
                     backgroundColor: "#fff",
                     borderColor: "#fff",
-                    data: [20, 40, 20, 70, 10, 5, 23],
+                    data: monthLabels.map(m => dashboard.charts.sale.chartValues[m]),
                     fill: false,
                     pointBorderWidth: 100,
                     pointBorderColor: "transparent",
@@ -394,22 +399,17 @@ export function dashboard() {
     });
 
     var ctxBar = document.getElementById("bar").getContext("2d");
+
+    let monthLabelsBar = monthLabels;
+
     var myBar = new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: monthLabelsBar,
             datasets: [{
-                label: 'Students',
+                label: 'Ventas',
                 backgroundColor: [chartColors.grey, chartColors.grey, chartColors.grey, chartColors.grey, chartColors.info, chartColors.blue, chartColors.grey],
-                data: [
-                    5,
-                    10,
-                    30,
-                    40,
-                    35,
-                    55,
-                    15,
-                ]
+                data: monthLabelsBar.map(m => dashboard.saleBars.sales[m])
             }]
         },
         options: {
@@ -442,8 +442,21 @@ export function dashboard() {
             }
         }
     });
+
+
+    var radialBarsSeries = dashboard.earnings.products.map(p => p.percentage)
+
+    if (radialBarsSeries.length <= 1)
+        radialBarsSeries.push(0)
+
+    var radialBarsLabels = dashboard.earnings.products.map(p => p.product)
+
+    if (radialBarsLabels.length <= 1)
+        radialBarsLabels.push("Otros")
+
+
     var radialBarsOptions = {
-        series: [44, 80, 67],
+        series: radialBarsSeries,
         chart: {
             height: 350,
             type: "radialBar",
@@ -470,18 +483,18 @@ export function dashboard() {
                     },
                     total: {
                         show: true,
-                        label: "Earnings",
+                        label: "Ganancias",
                         color: "#25A6F1",
                         fontSize: "16px",
                         formatter: function (w) {
                             // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                            return "$4,124";
+                            return "$" + dashboard.earnings.earnings;
                         },
                     },
                 },
             },
         },
-        labels: ["Apples", "Oranges", "Bananas", "Berries"],
+        labels: radialBarsLabels,
     };
     var radialBars = new ApexCharts(document.querySelector("#radialBars"), radialBarsOptions);
     radialBars.render();

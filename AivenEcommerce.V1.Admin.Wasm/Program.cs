@@ -52,6 +52,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IBasketService, BasketService>();
             builder.Services.AddScoped<ICouponCodeService, CouponCodeService>();
             builder.Services.AddScoped<ISaleService, SaleService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
 
             await builder.Build().RunAsync();
         }

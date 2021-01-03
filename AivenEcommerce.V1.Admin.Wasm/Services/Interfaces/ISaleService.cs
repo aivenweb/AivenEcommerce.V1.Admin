@@ -9,7 +9,6 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
 {
     public interface ISaleService
     {
-        Task<OperationResult<DashboardDto>> GetDashboardAsync();
         Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync();
         Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync(SaleParameters parameters);
         Task<OperationResult<SaleProductDto>> GetEarningsByProductAsync(string productId);

@@ -18,7 +18,6 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
-
         public Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync(SaleParameters parameters)
         {
             return _apiClient.GetAsync<OperationResult<PagedResult<SaleDto>>>("api/v1/sales");
@@ -27,11 +26,6 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
         public Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync()
         {
             return _apiClient.GetAsync<OperationResult<PagedResult<SaleDto>>>("api/v1/sales");
-        }
-
-        public Task<OperationResult<DashboardDto>> GetDashboardAsync()
-        {
-            return _apiClient.GetAsync<OperationResult<DashboardDto>>($"api/v1/Sales/Dashboard");
         }
 
         public Task<OperationResult<SaleProductDto>> GetEarningsByProductAsync(string productId)
