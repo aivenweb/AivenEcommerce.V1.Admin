@@ -92,7 +92,7 @@ export function dashboard(dashboard, months) {
                     label: "Ingresos",
                     backgroundColor: "#fff",
                     borderColor: "#fff",
-                    data: monthLabels.map(m => dashboard.charts.earnings.chartValues[m]),
+                    data: monthLabels.map(m => dashboard.charts.averageSales.chartValues[m]),
                     fill: false,
                     pointBorderWidth: 100,
                     pointBorderColor: "transparent",
@@ -506,4 +506,16 @@ export function dashboard(dashboard, months) {
     var lineChart2 = new Chart(ctx2, config2);
     var lineChart3 = new Chart(ctx3, config3);
     var lineChart4 = new Chart(ctx4, config4);
+
+    document.getElementById("kpi-customer-sales-completes").style.width = dashboard.keyPerfomanceIndicators.conversionRate + "%"
+    document.getElementById("kpi-customer-baskets").style.width = dashboard.keyPerfomanceIndicators.customerWIthBasket + "%"
+    document.getElementById("kpi-sales-incompletes").style.width = dashboard.keyPerfomanceIndicators.incompleteSales + "%"
+    document.getElementById("kpi-customer-sales-incompletes").style.width = dashboard.keyPerfomanceIndicators.customerWithIncompleteSales + "%"
+    document.getElementById("kpi-sales-coupons").style.width = dashboard.keyPerfomanceIndicators.salesWithCoupons + "%"
+
+    document.getElementById("kpi-txt-customer-sales-completes").innerHTML = dashboard.keyPerfomanceIndicators.conversionRate + "%"
+    document.getElementById("kpi-txt-customer-baskets").innerHTML = dashboard.keyPerfomanceIndicators.customerWIthBasket + "%"
+    document.getElementById("kpi-txt-sales-incompletes").innerHTML = dashboard.keyPerfomanceIndicators.incompleteSales + "%"
+    document.getElementById("kpi-txt-customer-sales-incompletes").innerHTML = dashboard.keyPerfomanceIndicators.customerWithIncompleteSales + "%"
+    document.getElementById("kpi-txt-sales-coupons").innerHTML = dashboard.keyPerfomanceIndicators.salesWithCoupons + "%"
 }
