@@ -12,5 +12,6 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
         Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync();
         Task<OperationResult<PagedResult<SaleDto>>> GetAllAsync(SaleParameters parameters);
         Task<OperationResult<SaleProductDto>> GetEarningsByProductAsync(string productId);
+        Task<OperationResult<SaleDeliveryDto>> GetSaleDeliveryAsync(string orderId);
     }
 }
