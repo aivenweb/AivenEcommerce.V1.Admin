@@ -38,6 +38,33 @@
                     <div class="card ">
                         <div class="card-header">
                             <h4>Dirección</h4>
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Calle</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.Street + " " + saleDeliveryDto.Address.Number + " " + saleDeliveryDto.Address.Depatarment)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Entre Calles</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.BetweenStreet1 + (!string.IsNullOrWhiteSpace(saleDeliveryDto.Address.BetweenStreet1) && !string.IsNullOrWhiteSpace(saleDeliveryDto.Address.BetweenStreet2) ? " Y ": default) + saleDeliveryDto.Address.BetweenStreet2 )</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Contacto</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.Name + " - " + saleDeliveryDto.Address.Phone)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Ciudad</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.City)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Código Postal</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.ZipCode)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Observaciones</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Address.Observations)</td>
+                                </tr>
+
+                            </table>
                         </div>
                         <div class="card-body">
 
