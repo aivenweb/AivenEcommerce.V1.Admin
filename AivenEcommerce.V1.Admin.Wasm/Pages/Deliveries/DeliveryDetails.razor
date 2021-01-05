@@ -37,7 +37,14 @@
                     </div>
                     <div class="card ">
                         <div class="card-header">
-                            <h4>Dirección</h4>
+                            <h4>Dirección @("- " + saleDeliveryDto.Address.Type switch
+                                        {
+                                             AddressType.Work => "Oficina de Trabajo",
+                                             AddressType.Home => "Hogar"
+                                            
+                            })</h4>
+                        </div>
+                        <div class="card-body">
                             <table class='table table-borderless'>
                                 <tr>
                                     <td class="text-bold-500">Calle</td>
@@ -65,8 +72,6 @@
                                 </tr>
 
                             </table>
-                        </div>
-                        <div class="card-body">
 
                         </div>
                     </div>
@@ -75,7 +80,20 @@
                             <h4>Información</h4>
                         </div>
                         <div class="card-body">
-
+                            <table class='table table-borderless'>
+                                <tr>
+                                    <td class="text-bold-500">Fecha Creación</td>
+                                    <td class="text-bold-500">@(saleDeliveryDto.Order.CreationDate.ToShortDateString() + " " + saleDeliveryDto.Order.CreationDate.ToLongTimeString() )</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Fecha de Pago</td>
+                                    <td class="@("text-bold-500 " + (!saleDeliveryDto.Order.PayDate.HasValue ? "text-red" : string.Empty))">@(saleDeliveryDto.Order.PayDate.HasValue ? saleDeliveryDto.Order.PayDate.Value.ToShortDateString() + " " + saleDeliveryDto.Order.PayDate.Value.ToLongTimeString() : "No se recibió un pago aun.")</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Cupón de Descuento</td>
+                                    <td class="@("text-bold-500 " + (string.IsNullOrWhiteSpace(saleDeliveryDto.Sale.CouponCode) ? "text-red" : string.Empty))">@(saleDeliveryDto.Sale.CouponCode ?? "No se utilizo un cupón.")</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -139,12 +157,12 @@
                         
                     </div>
 
-                    <div class="card ">
+                    <div class="card">
                         <div class="card-header">
                             <h4>Mapa</h4>
                         </div>
                         <div class="card-body">
-
+                            <iframe src="@($"https://www.google.com/maps?q={saleDeliveryDto.Address.Street} {saleDeliveryDto.Address.Number} {saleDeliveryDto.Address.City}&z=16&t=&ie=UTF8&output=embed")" width="100%" height="450"></iframe>
                         </div>
                     </div>
                     

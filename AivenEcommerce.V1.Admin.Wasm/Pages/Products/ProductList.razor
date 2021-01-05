@@ -111,7 +111,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(string.IsNullOrWhiteSpace(CategoryName) && string.IsNullOrWhiteSpace(SubCategoryName))
+        if (string.IsNullOrWhiteSpace(CategoryName) && string.IsNullOrWhiteSpace(SubCategoryName))
         {
             var result = await ProductService.GetAllAsync();
             if (result.IsSuccess)
