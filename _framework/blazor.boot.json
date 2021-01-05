@@ -29,7 +29,7 @@
       "Newtonsoft.Json.dll": "sha256-NsoGGncPmTDyWbNvXejIk6Y7I81RzCTxK60\/v9MztHA=",
       "Newtonsoft.Json.Bson.dll": "sha256-qCFGelulkqC1IxdsKRlf9mz3rF\/s3Yz3PWxzYWIu1qM=",
       "System.IO.Pipelines.dll": "sha256-qZYTUS+ga7CydtH54fYPbehFCvx3B49I74G8dxreTog=",
-      "AivenEcommerce.V1.Admin.Wasm.dll": "sha256-+RryGkjTGAiqn19srtxRRisWSj0qSc9oSwyyrO\/6A0E=",
+      "AivenEcommerce.V1.Admin.Wasm.dll": "sha256-pOKxg4NayUEBNYRZ2Ig5OgU7+B93Lwgg7ffFq5HU5h4=",
       "Microsoft.CSharp.dll": "sha256-Yak85cWFr3xaOLlN8TQz2h40OMU58\/kZuUulPwyjZqU=",
       "System.Collections.Concurrent.dll": "sha256-4oQBL0ymQKula+tCghs\/SqwJ8b15C8VMq3J+oIqCgIA=",
       "System.Collections.Immutable.dll": "sha256-H0NRRotG+86W0xlW9OELRJ+B6CWn5QPzD5wfmou5WDE=",
@@ -64,7 +64,7 @@
       "System.Text.Encodings.Web.dll": "sha256-p+w4VfOQe4xpDeMVUmqzR+TJIhbDwykCrATzc5\/TVUM=",
       "System.Text.Json.dll": "sha256-jycLrmqPQ+MzygbF8mQM0i\/FuP0Z1Tkc2rXJMw9IfVQ=",
       "System.Text.RegularExpressions.dll": "sha256-nFguiNuRzDAsSC1Xu9PvGbju1ogoDREAr2UmroHv5mM=",
-      "System.Private.CoreLib.dll": "sha256-7sMCF6v4ADNvOPEtxpEhVG2\/XgonPcvrv1tWY08t\/bY="
+      "System.Private.CoreLib.dll": "sha256-Wc5JyNhv9G1SdQBeECrs6CwJmjEV\/i5RitkDHx8hVFU="
     },
     "lazyAssembly": null,
     "pdb": null,
