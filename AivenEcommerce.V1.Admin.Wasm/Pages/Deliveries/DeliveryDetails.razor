@@ -105,53 +105,63 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-5">
-                                @switch (saleDeliveryDto.Delivery.Status)
+
+                                @if(saleDeliveryDto.Order.PayDate.HasValue)
                                 {
-                                    case DeliveryStatus.Delivered:
-                                        <h2>Entrgado</h2>
-                                        break;
-                                    case DeliveryStatus.NoAddressFound:
-                                        <h2>No se encontró la dirección</h2>
-                                        break;
-                                    case DeliveryStatus.ProductIncident:
-                                        <h2>Hubó un incidente con el producto</h2>
-                                        break;
-                                    case DeliveryStatus.IncorrectCode:
-                                        <h2>Código incorrecto</h2>
-                                        break;
-                                    case DeliveryStatus.BuyerNotFound:
-                                        <h2>No se pudo conctatar al comprador</h2>
-                                        break;
-                                    case DeliveryStatus.Created:
-                                        <h2>Creada</h2>
-                                        break;
-                                    case DeliveryStatus.Pending:
-                                        <h2>Pendiente</h2>
-                                        break;
-                                    case DeliveryStatus.Going:
-                                        <h2>En Camino</h2>
-                                        break;
+
+                                    @switch (saleDeliveryDto.Delivery.Status)
+                                    {
+                                        case DeliveryStatus.Delivered:
+                                            <h2>Entrgado</h2>
+                                            break;
+                                        case DeliveryStatus.NoAddressFound:
+                                            <h2>No se encontró la dirección</h2>
+                                            break;
+                                        case DeliveryStatus.ProductIncident:
+                                            <h2>Hubó un incidente con el producto</h2>
+                                            break;
+                                        case DeliveryStatus.IncorrectCode:
+                                            <h2>Código incorrecto</h2>
+                                            break;
+                                        case DeliveryStatus.BuyerNotFound:
+                                            <h2>No se pudo conctatar al comprador</h2>
+                                            break;
+                                        case DeliveryStatus.Created:
+                                            <h2>Creada</h2>
+                                            break;
+                                        case DeliveryStatus.Pending:
+                                            <h2>Entrega Pendiente</h2>
+                                            break;
+                                        case DeliveryStatus.Going:
+                                            <h2>En Camino</h2>
+                                            break;
+                                    }
+                                    @switch (saleDeliveryDto.Delivery.Status)
+                                    {
+                                        case DeliveryStatus.Delivered:
+                                            <span class="badge bg-success">Entregado</span>
+                                            break;
+                                        case DeliveryStatus.NoAddressFound:
+                                        case DeliveryStatus.ProductIncident:
+                                        case DeliveryStatus.IncorrectCode:
+                                        case DeliveryStatus.BuyerNotFound:
+                                            <span class="badge bg-danger">Problema</span>
+                                            break;
+                                        case DeliveryStatus.Created:
+                                        case DeliveryStatus.Pending:
+                                        case DeliveryStatus.Going:
+                                            <span class="badge bg-warning">Pendiente</span>
+                                            break;
+                                    }
+
                                 }
-                                @switch (saleDeliveryDto.Delivery.Status)
-                                {
-                                    case DeliveryStatus.Delivered:
-                                        <span class="badge bg-success">Entregado</span>
-                                        break;
-                                    case DeliveryStatus.NoAddressFound:
-                                    case DeliveryStatus.ProductIncident:
-                                    case DeliveryStatus.IncorrectCode:
-                                    case DeliveryStatus.BuyerNotFound:
-                                        <span class="badge bg-danger">Problema</span>
-                                        break;
-                                    case DeliveryStatus.Created:
-                                    case DeliveryStatus.Pending:
-                                    case DeliveryStatus.Going:
-                                        <span class="badge bg-warning">Pendiente</span>
-                                        break;
+                                else{
+                                    <h2>No Pago</h2>
+                                    <span class="badge bg-warning">Pendiente</span>
                                 }
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="plus"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                         
@@ -178,6 +188,14 @@
                                 <h6>Total</h6>
                                 <h1 class='text-purple'>+$@(saleDeliveryDto.Order.TotalAmount)</h1>
                             </div>
+
+                            @if(!saleDeliveryDto.Order.PayDate.HasValue)
+                            {
+                                <div class="d-flex justify-content-end">
+                                <button class="btn icon icon-left btn-primary"><i data-feather="dollar-sign"></i> Descuento</button>
+                            </div>
+                            }
+
                         </div>
                     </div>
                     <div class="card ">
@@ -201,7 +219,7 @@
                                 }
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary" @onclick="ShowAllBasket"><i data-feather="plus"></i> Ver Todos</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="ShowAllBasket"><i data-feather="search"></i> Ver Todos</button>
                             </div>
                         </div>
                     </div>
