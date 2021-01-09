@@ -1,4 +1,4 @@
-﻿@page "/order/{OrderId}/delivery"
+﻿@page "/orders/{OrderId}/delivery"
 
 @inject ISaleService SaleService
 @inject NavigationManager NavigationManager
@@ -188,11 +188,11 @@
                                 <h6>Total</h6>
                                 <h1 class='text-purple'>+$@(saleDeliveryDto.Order.TotalAmount)</h1>
                             </div>
-
+                            
                             @if(!saleDeliveryDto.Order.PayDate.HasValue)
                             {
                                 <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="dollar-sign"></i> Descuento</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="DescuentoOnClick"><i data-feather="dollar-sign"></i> Descuento</button>
                             </div>
                             }
 
@@ -261,6 +261,11 @@
     void ShowAllBasket(MouseEventArgs args)
     {
         NavigationManager.NavigateTo($"baskets/{saleDeliveryDto.Customer.Email}/list");
+    }
+
+    void DescuentoOnClick(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo($"orders/{OrderId}/TotalAmount/edit");
     }
 
 }
