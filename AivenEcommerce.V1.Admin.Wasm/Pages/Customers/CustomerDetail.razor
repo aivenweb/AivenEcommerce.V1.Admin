@@ -1,6 +1,7 @@
 ﻿@page "/customers/{Email}/details"
 @inject ICustomerService CustomerService
 @inject IBasketService BasketService
+@inject IOrderService OrderService
 @inject IWishListService WishListService
 @inject NavigationManager NavigationManager
 
@@ -54,7 +55,10 @@
                         <div class="card-body">
                             <div class="text-center mb-5">
                                 <h6>Total</h6>
-                                <h1 class='text-purple'>+$2,134</h1>
+                                @if(orders is not null)
+                                {
+                                    <h1 class='text-purple'>@($"${orders.Where(x => x.PayDate.HasValue).Sum(x => x.TotalAmount)}")</h1>
+                                }
                             </div>
                         </div>
                     </div>
@@ -68,7 +72,10 @@
                         <div class="card-body">
                             <div class="text-center mb-5">
                                 <h6>Total</h6>
-                                <h1 class='text-green'>7</h1>
+                                @if(orders is not null)
+                                {
+                                    <h1 class='text-green'>@(orders.Count(x => x.PayDate.HasValue))</h1>
+                                }
                             </div>
                         </div>
                     </div>
@@ -138,12 +145,14 @@
     CustomerDto customer;
     BasketProductsDto basket;
     WishListProductsDto wishlist;
+    IEnumerable<OrderDto> orders;
 
     protected override void OnInitialized()
     {
         UpdateCustomer();
         UpdateBasket();
         UpdateWishList();
+        UpdateOrders();
 
     }
 
@@ -159,6 +168,16 @@
         .ContinueWith(x =>
         {
             customer = x.Result.Result;
+            StateHasChanged();
+        });
+    }
+
+    void UpdateOrders()
+    {
+        this.OrderService.GetOrdersByCustomerAsync(Email)
+        .ContinueWith(x =>
+        {
+            orders = x.Result.Result.Items;
             StateHasChanged();
         });
     }

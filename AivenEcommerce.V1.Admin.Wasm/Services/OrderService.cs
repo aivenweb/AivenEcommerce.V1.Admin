@@ -1,6 +1,7 @@
 ﻿using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 using AivenEcommerce.V1.Domain.Shared.Dtos.Orders;
 using AivenEcommerce.V1.Domain.Shared.OperationResults;
+using AivenEcommerce.V1.Domain.Shared.Paginations;
 
 using System;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
         public Task<OperationResult<OrderDto>> GetAsync(string id)
         {
             return _apiClient.GetAsync<OperationResult<OrderDto>>($"api/v1/Orders/{id}");
+        }
+
+        public Task<OperationResult<PagedResult<OrderDto>>> GetOrdersByCustomerAsync(string customerEmail)
+        {
+            return _apiClient.GetAsync<OperationResult<PagedResult<OrderDto>>>($"api/v1/Orders?CustomerEmail={customerEmail}");
         }
 
         public Task<OperationResult> UpdateTotalAmountAsync(UpdateOrderTotalAmountInput input)
