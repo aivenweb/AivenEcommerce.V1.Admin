@@ -53,4 +53,4 @@ function onMessage(event) {
         self.skipWaiting();
     }
 }
-/* Manifest version: zW/nLcFt */
+/* Manifest version: dTBUeine */
