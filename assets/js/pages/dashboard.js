@@ -1,7 +1,4 @@
 export function dashboard(dashboard, months) {
-    console.log(dashboard)
-    console.log(months)
-
     let monthLabels = Object.getOwnPropertyNames(dashboard.charts.customer.chartValues)
 
     var chartColors = {
