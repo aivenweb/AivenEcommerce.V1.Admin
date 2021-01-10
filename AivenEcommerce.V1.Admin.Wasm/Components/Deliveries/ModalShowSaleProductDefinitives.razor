@@ -1,0 +1,110 @@
+﻿@inject IJSRuntime JSRuntime
+@inject IApiOptions ApiOptions
+
+<div class="modal fade" id="showSaleProductDefinitivesModal" data-keyboard="false" tabindex="-1" aria-labelledby="showSaleProductDefinitivesModalTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="showSaleProductDefinitivesModalTitle">Productos Para Entregar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class='table table-striped' id="table1">
+                    <thead>
+                        <tr>
+                            <th data-sortable="false">Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Variantes</th>
+                            <th>Categoria</th>
+                            <th>SubCategoria</th>
+                            <th>Activo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Products)
+                        {
+                            <tr>
+                                <td>
+                                    @if (item.Thumbnail is not null)
+                                    {
+                                        <div class="avatar avatar-lg"><img src="@item.Thumbnail.ToString()" /></div>
+                                    }
+                                </td>
+                                <td>@item.Name</td>
+                                <td>@( "$" +item.Price)</td>
+                                <td>@( ProductDefinitives.Single(x => x.ProductId == item.Id).Quantity)</td>
+                                <td>
+                                    <ul>
+                                        @foreach(var variants in ProductDefinitives.Single(x => x.ProductId == item.Id).Variants)
+                                        {
+                                            <li>@variants.Name : @variants.Value</li>
+                                        }
+                                    </ul>
+                                </td>
+                                <td>@item.Category</td>
+                                <td>@item.SubCategory</td>
+                                <td data-sortable="false">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Aceptar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code{
+    [Parameter]
+    public IEnumerable<ProductDto> Products { get; set; }
+
+    [Parameter]
+    public IEnumerable<ProductDefinitive> ProductDefinitives { get; set; }
+
+    public Task Show()
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "showSaleProductDefinitivesModal").AsTask();
+    }
+
+    // Load the module and keep a reference to it
+    // You need to use .AsTask() to convert the ValueTask to Task as it may be awaited multiple times
+    private Task<IJSObjectReference> _module;
+    private Task<IJSObjectReference> Module => _module ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./assets/js/vendors.js").AsTask();
+
+    async Task Submit()
+    {
+        var module = await Module;
+        await module.InvokeVoidAsync("dataTable");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            var module = await _module;
+            await module.DisposeAsync();
+        }
+    }
+}

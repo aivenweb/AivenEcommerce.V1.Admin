@@ -219,13 +219,15 @@
                                 }
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary" @onclick="ShowAllBasket"><i data-feather="search"></i> Ver Todos</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="ShowAllProducts"><i data-feather="search"></i> Ver Todos</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <ModalShowSaleProductDefinitives @ref=saleProductDefinitivesModalRef Products="saleDeliveryDto.Products" ProductDefinitives="saleDeliveryDto.SaleDetail.Products" ></ModalShowSaleProductDefinitives>
     }
 
 </div>
@@ -236,6 +238,8 @@
     public string OrderId { get; set; }
 
     SaleDeliveryDto saleDeliveryDto;
+
+    ModalShowSaleProductDefinitives saleProductDefinitivesModalRef;
 
 
     protected override async Task OnInitializedAsync()
@@ -258,9 +262,9 @@
         NavigationManager.NavigateTo($"wishlists/{saleDeliveryDto.Customer.Email}/list");
     }
 
-    void ShowAllBasket(MouseEventArgs args)
+    Task ShowAllProducts(MouseEventArgs args)
     {
-        NavigationManager.NavigateTo($"baskets/{saleDeliveryDto.Customer.Email}/list");
+        return saleProductDefinitivesModalRef.Show();
     }
 
     void DescuentoOnClick(MouseEventArgs args)
