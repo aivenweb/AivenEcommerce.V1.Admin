@@ -161,7 +161,7 @@
                                 }
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</button>
+                                <button class="btn icon icon-left btn-primary" @onclick="UpdateStatusOnClick"><i data-feather="edit"></i> Editar</button>
                             </div>
                         </div>
                         
@@ -227,7 +227,9 @@
             </div>
         </section>
 
-        <ModalShowSaleProductDefinitives @ref=saleProductDefinitivesModalRef Products="saleDeliveryDto.Products" ProductDefinitives="saleDeliveryDto.SaleDetail.Products" ></ModalShowSaleProductDefinitives>
+        <ModalShowSaleProductDefinitives @ref=saleProductDefinitivesModalRef Products="saleDeliveryDto.Products" ProductDefinitives="saleDeliveryDto.SaleDetail.Products" />
+
+        <ModalChangeStatusSaleDelivery @ref=changeStatusSaleDeliveryModalRef DeliveryStatus="saleDeliveryDto.Delivery.Status" SaleStatus="saleDeliveryDto.Sale.Status"/>
     }
 
 </div>
@@ -240,6 +242,7 @@
     SaleDeliveryDto saleDeliveryDto;
 
     ModalShowSaleProductDefinitives saleProductDefinitivesModalRef;
+    ModalChangeStatusSaleDelivery changeStatusSaleDeliveryModalRef;
 
 
     protected override async Task OnInitializedAsync()
@@ -255,13 +258,6 @@
     }
 
 
-   
-
-    void ShowAllWishList(MouseEventArgs args)
-    {
-        NavigationManager.NavigateTo($"wishlists/{saleDeliveryDto.Customer.Email}/list");
-    }
-
     Task ShowAllProducts(MouseEventArgs args)
     {
         return saleProductDefinitivesModalRef.Show();
@@ -270,6 +266,11 @@
     void DescuentoOnClick(MouseEventArgs args)
     {
         NavigationManager.NavigateTo($"orders/{OrderId}/TotalAmount/edit");
+    }
+
+    Task UpdateStatusOnClick(MouseEventArgs args)
+    {
+        return changeStatusSaleDeliveryModalRef.Show();
     }
 
 }

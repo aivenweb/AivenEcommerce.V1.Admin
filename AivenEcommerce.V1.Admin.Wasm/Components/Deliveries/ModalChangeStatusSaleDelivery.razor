@@ -1,0 +1,101 @@
+﻿@inject IJSRuntime JSRuntime
+@inject IApiOptions ApiOptions
+
+<div class="modal fade" id="changeStatusSaleDeliveryModal" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="changeStatusSaleDeliveryModalTitle" aria-hidden="true" data->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeStatusSaleDeliveryModalTitle">Cambiar Estado de Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="OnCloseCallback">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Estado Actual: @CurrentStatus()</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div class="position-relative">
+
+                                        <select class="choices form-select" id="product-edit-category" @onchange=StatusChange>
+
+                                            <option value="">Pagado</option>
+                                            <option value="">Entregado</option>
+                                            <option value="">Devuelto</option>
+                                            <option value="">Yendo</option>
+                                            <option value="">No se encontro al comprador</option>
+                                            <option value="">No se encontro la calle</option>
+                                            <option value="">Hubo un incidente con el producto</option>
+                                            <option value="">Numero de calle incorrecto</option>
+
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="OnCloseCallback">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Aceptar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public SaleStatus SaleStatus { get; set; }
+
+    [Parameter]
+    public DeliveryStatus DeliveryStatus { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+    string status = string.Empty;
+
+    public Task Show()
+    {
+        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "changeStatusSaleDeliveryModal").AsTask();
+    }
+
+    void StatusChange(ChangeEventArgs e)
+    {
+        status = e.Value.ToString();
+    }
+
+    string CurrentStatus()
+    {
+        if(SaleStatus != SaleStatus.Payed)
+        {
+            return SaleStatus switch
+            {
+                SaleStatus.Delivered => "Entregado",
+                SaleStatus.PendingPayment => "Pago Pendiente",
+                SaleStatus.Returned => "Devuelto"
+            };
+        }
+        else
+        {
+            return DeliveryStatus switch
+            {
+                DeliveryStatus.Pending => "Entrega Pendiente",
+                DeliveryStatus.BuyerNotFound => "No se encontro al comprador",
+                DeliveryStatus.Going => "Yendo",
+                DeliveryStatus.NoAddressFound => "No se encontro la calle",
+                DeliveryStatus.ProductIncident => "Hubo un incidente con el producto",
+                DeliveryStatus.IncorrectCode => "Numero de calle incorrecto",
+            };
+        }
+    }
+}
