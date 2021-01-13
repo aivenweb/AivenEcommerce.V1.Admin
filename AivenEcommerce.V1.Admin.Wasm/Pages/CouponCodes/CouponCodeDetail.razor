@@ -1,6 +1,7 @@
 ﻿@page "/couponcodes/{Code}"
 @inject IProductService ProductService
 @inject IProductCategoryService ProductCategoryService
+@inject ISaleService SaleService
 @inject ICouponCodeService CouponCodeService
 @inject IJSRuntime JSRuntime
 @inject ICustomerService CustomerService
@@ -99,8 +100,12 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-5">
-                                <h6>Ordenes</h6>
-                                <h1 class='text-purple'>8</h1>
+                                <h6>Ventas</h6>
+                                @if(saleOrders is not null)
+                                {
+                                    <h1 class='text-purple'>@saleOrders.Count()</h1>
+                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -163,12 +168,15 @@
                 <div class="col-md-4">
                     <div class="card ">
                         <div class="card-header">
-                            <h4>Cantidad de Compras</h4>
+                            <h4>Clientes que lo Usaron</h4>
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-5">
                                 <h6>Total</h6>
-                                <h1 class='text-green'>7</h1>
+                                @if(saleOrders is not null)
+                                {
+                                    <h1 class='text-green'>@saleOrders.Select(x => x.Order.CustomerEmail).Distinct().Count()</h1>
+                                }
                             </div>
                         </div>
                     </div>
@@ -247,6 +255,7 @@
     IEnumerable<ProductCategoryDto> categories;
     IEnumerable<CustomerDto> customers;
     IEnumerable<ProductDto> products;
+    IEnumerable<SaleOrderDto> saleOrders;
 
     ModalUpdateCouponCodeCategory modalUpdateCouponCodeCategory;
     ModalUpdateCouponCodeCustomer modalUpdateCouponCodeCustomer;
@@ -259,6 +268,7 @@
         UpdateCategories();
         UpdateCustomers();
         UpdateProducts();
+        UpdateSales();
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -277,6 +287,16 @@
             .ContinueWith(x =>
             {
                 categories = x.Result.Result;
+                StateHasChanged();
+            });
+    }
+
+    private void UpdateSales()
+    {
+        SaleService.GetSaleByCouponAsync(Code)
+            .ContinueWith(x =>
+            {
+                saleOrders = x.Result.Result;
                 StateHasChanged();
             });
     }

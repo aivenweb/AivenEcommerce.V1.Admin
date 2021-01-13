@@ -1,5 +1,6 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject IApiOptions ApiOptions
+@inject ISaleService SaleService
 
 <div class="modal fade" id="changeStatusSaleDeliveryModal" backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="changeStatusSaleDeliveryModalTitle" aria-hidden="true" data->
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -23,14 +24,14 @@
 
                                         <select class="choices form-select" id="product-edit-category" @onchange=StatusChange>
 
-                                            <option value="">Pagado</option>
-                                            <option value="">Entregado</option>
-                                            <option value="">Devuelto</option>
-                                            <option value="">Yendo</option>
-                                            <option value="">No se encontro al comprador</option>
-                                            <option value="">No se encontro la calle</option>
-                                            <option value="">Hubo un incidente con el producto</option>
-                                            <option value="">Numero de calle incorrecto</option>
+                                            <option value="1">Pagado</option>
+                                            <option value="2">Entregado</option>
+                                            <option value="3">Devuelto</option>
+                                            <option value="13">Yendo</option>
+                                            <option value="14">No se encontro la calle</option>
+                                            <option value="15">Hubo un incidente con el producto</option>
+                                            <option value="16">Numero de calle incorrecto</option>
+                                            <option value="17">No se encontro al comprador</option>
 
 
                                         </select>
@@ -43,7 +44,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="OnCloseCallback">
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @onclick="SaveOnClick">
                     <i class="bx bx-check d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Aceptar</span>
                 </button>
@@ -60,23 +61,56 @@
     public DeliveryStatus DeliveryStatus { get; set; }
 
     [Parameter]
+    public string SaleId { get; set; }
+
+    [Parameter]
     public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
 
-    string status = string.Empty;
+    SaleStatus saleStatusNew = default;
+    DeliveryStatus deliveryStatusNew = default;
+    int statusValue = default;
 
-    public Task Show()
+    public async Task Show()
     {
-        return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "changeStatusSaleDeliveryModal").AsTask();
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.showModal", "changeStatusSaleDeliveryModal");
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.createChoice", "select#product-edit-category");
+        saleStatusNew = SaleStatus;
+        deliveryStatusNew = DeliveryStatus;
+    }
+
+
+    async Task SaveOnClick(MouseEventArgs args)
+    {
+        switch (statusValue)
+        {
+            case int value when value == 1:
+                saleStatusNew = (SaleStatus)value;
+                deliveryStatusNew = DeliveryStatus.Pending;
+                break;
+            case int value when value == 2 || value == 3:
+                saleStatusNew = (SaleStatus)value;
+                deliveryStatusNew = DeliveryStatus.Delivered;
+                break;
+            case int value when value > 10:
+                deliveryStatusNew = (DeliveryStatus)(value - 10);
+                saleStatusNew = SaleStatus.Payed;
+                break;
+        }
+
+        await SaleService.UpdateSaleDaliveryStatusAsync(new(SaleId, saleStatusNew, deliveryStatusNew));
+
+        if (OnCloseCallback.HasDelegate)
+            await OnCloseCallback.InvokeAsync(args);
     }
 
     void StatusChange(ChangeEventArgs e)
     {
-        status = e.Value.ToString();
+        statusValue = int.Parse(e.Value.ToString());
     }
 
     string CurrentStatus()
     {
-        if(SaleStatus != SaleStatus.Payed)
+        if (SaleStatus != SaleStatus.Payed)
         {
             return SaleStatus switch
             {

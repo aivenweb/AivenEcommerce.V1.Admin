@@ -112,7 +112,7 @@
                                     @switch (saleDeliveryDto.Delivery.Status)
                                     {
                                         case DeliveryStatus.Delivered:
-                                            <h2>Entrgado</h2>
+                                            <h2>Entregado</h2>
                                             break;
                                         case DeliveryStatus.NoAddressFound:
                                             <h2>No se encontró la dirección</h2>
@@ -229,7 +229,7 @@
 
         <ModalShowSaleProductDefinitives @ref=saleProductDefinitivesModalRef Products="saleDeliveryDto.Products" ProductDefinitives="saleDeliveryDto.SaleDetail.Products" />
 
-        <ModalChangeStatusSaleDelivery @ref=changeStatusSaleDeliveryModalRef DeliveryStatus="saleDeliveryDto.Delivery.Status" SaleStatus="saleDeliveryDto.Sale.Status"/>
+        <ModalChangeStatusSaleDelivery @ref=changeStatusSaleDeliveryModalRef DeliveryStatus="saleDeliveryDto.Delivery.Status" SaleStatus="saleDeliveryDto.Sale.Status" SaleId="@saleDeliveryDto.Sale.Id" OnCloseCallback="UpdateStateOnClose"/>
     }
 
 </div>
@@ -245,11 +245,23 @@
     ModalChangeStatusSaleDelivery changeStatusSaleDeliveryModalRef;
 
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        var saleDeliveryDtoResult = await SaleService.GetSaleDeliveryAsync(OrderId);
-        saleDeliveryDto = saleDeliveryDtoResult.Result;
+        UpdateSale();
+    }
 
+    void UpdateSale()
+    {
+        SaleService.GetSaleDeliveryAsync(OrderId).ContinueWith(x => 
+        {
+            saleDeliveryDto = x.Result.Result;
+            StateHasChanged();
+        });
+    }
+
+    void UpdateStateOnClose(MouseEventArgs args)
+    {
+        UpdateSale();
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
