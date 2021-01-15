@@ -55,6 +55,7 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IIdentityService, IdentityService>();
 
             await builder.Build().RunAsync();
         }

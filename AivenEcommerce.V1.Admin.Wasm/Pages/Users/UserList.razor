@@ -34,6 +34,7 @@
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th data-sortable="false">Ver más</th>
                         </tr>
                     </thead>
@@ -51,6 +52,7 @@
                                 <td>@item.Name</td>
                                 <td>@item.LastName</td>
                                 <td>@item.Email</td>
+                                <td>@item.Role.ToString()</td>
 
                                 <td>
                                     <NavLink href=@($"/users/{item.Email}/edit") class="btn icon icon-left btn-primary"><i data-feather="edit"></i> Editar</NavLink>
