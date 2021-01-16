@@ -14,7 +14,7 @@
                         <h3>Iniciar Sesión</h3>
                         <p>Inicia sesión para continuar con su dashboard.</p>
                     </div>
-                    <form action="index.html">
+
                         <div class="form-group position-relative has-icon-left">
                             <label for="email">Email</label>
                             <div class="position-relative">
@@ -51,7 +51,7 @@
                         <div class="clearfix">
                             <button class="btn btn-primary float-right" @onclick=LoginOnClick>Entrar</button>
                         </div>
-                    </form>
+          
                     <div class="divider">
                         <div class="divider-text">OR</div>
                     </div>
@@ -85,7 +85,6 @@
     async Task LoginOnClick(MouseEventArgs args)
     {
         var result = await IdentityService.Login(new(email, password));
-        await JSRuntime.InvokeVoidAsync("console.log", result).AsTask();
     }
 
 }
