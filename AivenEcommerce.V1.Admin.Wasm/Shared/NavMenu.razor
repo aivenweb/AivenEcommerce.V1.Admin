@@ -1,4 +1,6 @@
 ﻿@using System.Security.Claims
+@inject IUserService UserService
+
 <nav class="navbar navbar-header navbar-expand navbar-light">
     <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
     <button class="btn navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -46,13 +48,13 @@
             </li>
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                    @if (AuthenticationState is not null)
+                    @if (User is not null)
                     {
                         <div class="avatar mr-1">
-                            <img src="@(AuthenticationState.FindFirst(ClaimTypes.Thumbprint).Value)" alt="" srcset="">
+                            <img src="@(User.Picture)" alt="" srcset="">
                         </div>
 
-                        <div class="d-none d-md-block d-lg-inline-block">Hola, @(AuthenticationState.FindFirst(ClaimTypes.Name).Value)</div>
+                        <div class="d-none d-md-block d-lg-inline-block">Hola, @(User.Name)</div>
                     }
 
 
@@ -74,11 +76,24 @@
     public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     public ClaimsPrincipal AuthenticationState { get; set; }
+    public UserDto User { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateTask;
         AuthenticationState = authState.User;
+
+        if  (AuthenticationState.HasClaim(x => x.Type == ClaimTypes.Email))
+        {
+            var email = AuthenticationState.FindFirst(ClaimTypes.Email).Value;
+
+            var userResult = await UserService.GetAsync(email);
+
+            if (userResult.IsSuccess)
+            {
+                User = userResult.Result;
+            }
+        }
     }
 
 }

@@ -26,7 +26,7 @@
                                         {
                                             @foreach (var item in Categories)
                                             {
-                                                <option value="@item.Name" selected="@(CouponCode.Categories?.Contains(@item.Name) ?? false)">@item.Name</option>
+                                                <option value="@item.Name" selected="@(CouponCode?.Categories?.Contains(@item.Name) ?? false)">@item.Name</option>
                                             }
                                         }
                                     </select>
