@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-
+﻿using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 using AivenEcommerce.V1.Domain.Shared.Dtos.ProductCategories;
 using AivenEcommerce.V1.Domain.Shared.OperationResults;
-using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
+
+using System;
+using System.Threading.Tasks;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services
 {
@@ -43,7 +43,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services
 
         public Task<OperationResultEnumerable<ProductSubCategoryDto>> GetSubCategoriesAsync(string categoryName)
         {
-            return _apiClient.GetAsync<OperationResultEnumerable<ProductSubCategoryDto>>($"api/v1/productcategories/{categoryName}/Subcategories" );
+            return _apiClient.GetAsync<OperationResultEnumerable<ProductSubCategoryDto>>($"api/v1/productcategories/{categoryName}/Subcategories");
         }
 
         public Task<OperationResult<ProductCategoryDto>> UpdateAsync(UpdateProductCategoryInput input)

@@ -1,5 +1,4 @@
 ﻿using AivenEcommerce.V1.Domain.Shared.Dtos.Identity;
-using AivenEcommerce.V1.Domain.Shared.Dtos.Users;
 using AivenEcommerce.V1.Domain.Shared.OperationResults;
 
 using System.Threading.Tasks;

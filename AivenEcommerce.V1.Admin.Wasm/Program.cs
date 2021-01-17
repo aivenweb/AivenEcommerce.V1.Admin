@@ -1,7 +1,4 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-
+using AivenEcommerce.V1.Admin.Wasm.Auth;
 using AivenEcommerce.V1.Admin.Wasm.Http;
 using AivenEcommerce.V1.Admin.Wasm.Options;
 using AivenEcommerce.V1.Admin.Wasm.Services;
@@ -9,9 +6,16 @@ using AivenEcommerce.V1.Admin.Wasm.Services.ComponentServices;
 using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 using AivenEcommerce.V1.WebApi.Startup;
 
+using Blazored.SessionStorage;
+
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace AivenEcommerce.V1.Admin.Wasm
 {
@@ -26,10 +30,18 @@ namespace AivenEcommerce.V1.Admin.Wasm
 
             builder.Services.AddScoped<SpinnerComponentService>();
             builder.Services.AddScoped<AlertComponentService>();
+            builder.Services.AddBlazoredSessionStorage();
             builder.Services.AddOptions<IApiOptions, ApiOptions>(builder.Configuration);
             builder.Services.AddScoped<AivenHttpMessageHandler>();
 
+
+
             builder.Services.AddScoped<IApiClientService, ApiClientService>();
+
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
+
+            builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 
             builder.Services.AddScoped(sp =>
             {
@@ -56,6 +68,8 @@ namespace AivenEcommerce.V1.Admin.Wasm
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
+
+
 
             await builder.Build().RunAsync();
         }

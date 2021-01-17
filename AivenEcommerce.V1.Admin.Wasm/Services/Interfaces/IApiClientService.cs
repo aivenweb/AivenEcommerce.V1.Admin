@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using AivenEcommerce.V1.Domain.Shared.OperationResults;
 
-using AivenEcommerce.V1.Domain.Shared.OperationResults;
+using System.Threading.Tasks;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
 {

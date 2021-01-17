@@ -1,4 +1,5 @@
-﻿<nav class="navbar navbar-header navbar-expand navbar-light">
+﻿@using System.Security.Claims
+<nav class="navbar navbar-header navbar-expand navbar-light">
     <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
     <button class="btn navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,10 +46,16 @@
             </li>
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                    <div class="avatar mr-1">
-                        <img src="assets/images/avatar/avatar-s-1.png" alt="" srcset="">
-                    </div>
-                    <div class="d-none d-md-block d-lg-inline-block">Hi, Saugi</div>
+                    @if (AuthenticationState is not null)
+                    {
+                        <div class="avatar mr-1">
+                            <img src="@(AuthenticationState.FindFirst(ClaimTypes.Thumbprint).Value)" alt="" srcset="">
+                        </div>
+
+                        <div class="d-none d-md-block d-lg-inline-block">Hola, @(AuthenticationState.FindFirst(ClaimTypes.Name).Value)</div>
+                    }
+
+
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
@@ -61,3 +68,17 @@
         </ul>
     </div>
 </nav>
+
+@code{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    public ClaimsPrincipal AuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateTask;
+        AuthenticationState = authState.User;
+    }
+
+}

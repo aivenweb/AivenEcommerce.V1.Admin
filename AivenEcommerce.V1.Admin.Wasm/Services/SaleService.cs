@@ -4,7 +4,6 @@ using AivenEcommerce.V1.Domain.Shared.OperationResults;
 using AivenEcommerce.V1.Domain.Shared.Paginations;
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services

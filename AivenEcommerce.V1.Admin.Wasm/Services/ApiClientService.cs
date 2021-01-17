@@ -1,10 +1,10 @@
-﻿using System;
+﻿using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
+using AivenEcommerce.V1.Domain.Shared.OperationResults;
+
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-
-using AivenEcommerce.V1.Domain.Shared.OperationResults;
-using AivenEcommerce.V1.Admin.Wasm.Services.Interfaces;
 
 namespace AivenEcommerce.V1.Admin.Wasm.Services
 {
