@@ -7,6 +7,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Services.Interfaces
 {
     public interface IIdentityService
     {
-        Task<OperationResult<JwtUserDto>> Login(LoginInput input);
+        Task<OperationResult<JwtUserDto>> LoginAsync(LoginInput input);
+        Task<OperationResult<JwtUserDto>> GetStateAsync();
     }
 }

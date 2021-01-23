@@ -98,7 +98,7 @@
 
     async Task LoginOnClick(MouseEventArgs args)
     {
-        var result = await IdentityService.Login(new(email, password));
+        var result = await IdentityService.LoginAsync(new(email, password));
 
         if (result.IsSuccess)
         {

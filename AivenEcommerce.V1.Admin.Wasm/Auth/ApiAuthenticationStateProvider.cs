@@ -16,10 +16,10 @@ namespace AivenEcommerce.V1.Admin.Wasm.Auth
 {
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly IApiClientService _apiClient;
+        private readonly IIdentityService _apiClient;
         private readonly ISyncSessionStorageService _sessionStorage;
 
-        public ApiAuthenticationStateProvider(IApiClientService apiClient, ISyncSessionStorageService sessionStorage)
+        public ApiAuthenticationStateProvider(IIdentityService apiClient, ISyncSessionStorageService sessionStorage)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
@@ -27,7 +27,7 @@ namespace AivenEcommerce.V1.Admin.Wasm.Auth
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var result = await _apiClient.GetAsync<OperationResult<JwtUserDto>>("/api/v1/Identity/GetUser");
+            var result = await _apiClient.GetStateAsync();
 
             if (result.IsSuccess)
             {

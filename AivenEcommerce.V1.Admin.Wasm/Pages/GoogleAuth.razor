@@ -13,4 +13,10 @@
     {
         await JSRuntime.InvokeVoidAsync("window.loadJS", "https://apis.google.com/js/platform.js");
     }
+
+    [JSInvokable]
+    public static Task<string[]> ReturnArrayAsync(string token)
+    {
+        return Task.FromResult(new string[] { "1", "2", "3", token });
+    }
 }
