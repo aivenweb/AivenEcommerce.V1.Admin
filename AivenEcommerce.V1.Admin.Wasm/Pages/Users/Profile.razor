@@ -1,0 +1,34 @@
+﻿@page "/profile"
+@using System.Security.Claims
+@inject IUserService UserService
+
+<h3>Profile</h3>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    ClaimsPrincipal AuthenticationState { get; set; }
+
+    UserDto customer;
+
+    YesNoQuestionModal QuestionModal;
+
+    string name = string.Empty;
+    string lastname = string.Empty;
+    string password = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateTask;
+        AuthenticationState = authState.User;
+
+        var email = AuthenticationState.FindFirst(ClaimTypes.Email).Value;
+
+        var result = await UserService.GetAsync(email);
+        customer = result.Result;
+        name = customer.Name;
+        lastname = customer.LastName;
+    }
+}
