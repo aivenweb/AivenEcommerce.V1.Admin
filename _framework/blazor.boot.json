@@ -9,7 +9,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "AivenEcommerce.V1.Domain.Shared.dll": "sha256-7wrnY9eh7rgd0n7Hxo9yp22EFk0bDh2FhqwhpEjR3bw=",
+      "AivenEcommerce.V1.Domain.Shared.dll": "sha256-nkl0ayLOmP7BpiVOhFirK\/DAYg\/hescdiA288rgtens=",
       "Blazored.SessionStorage.dll": "sha256-R2E+pGVZ7Rdl4z1GMGqNSiqG65EPk5X4ZGl7bk0vMR8=",
       "System.Net.Http.Formatting.dll": "sha256-vx3iuAzakm38sKRKCsmQ7UUnFD6xuPenQFwUDQigZp8=",
       "Microsoft.AspNetCore.Authorization.dll": "sha256-vXRF63+kivXVALyeYP\/gABPRltB1gIGbNVgPoAcLWMs=",
@@ -33,7 +33,7 @@
       "Newtonsoft.Json.dll": "sha256-NsoGGncPmTDyWbNvXejIk6Y7I81RzCTxK60\/v9MztHA=",
       "Newtonsoft.Json.Bson.dll": "sha256-qCFGelulkqC1IxdsKRlf9mz3rF\/s3Yz3PWxzYWIu1qM=",
       "System.IO.Pipelines.dll": "sha256-qZYTUS+ga7CydtH54fYPbehFCvx3B49I74G8dxreTog=",
-      "AivenEcommerce.V1.Admin.Wasm.dll": "sha256-qKSx8hhGdKQx3ggKsyvNgUws5bff2JmJgY7CcNlNy6o=",
+      "AivenEcommerce.V1.Admin.Wasm.dll": "sha256-r4epdL8af6J4Vqres3uxrnhpm5mlnl18g0WK1HGQ6OY=",
       "Microsoft.CSharp.dll": "sha256-Yak85cWFr3xaOLlN8TQz2h40OMU58\/kZuUulPwyjZqU=",
       "System.Collections.Concurrent.dll": "sha256-4oQBL0ymQKula+tCghs\/SqwJ8b15C8VMq3J+oIqCgIA=",
       "System.Collections.Immutable.dll": "sha256-H0NRRotG+86W0xlW9OELRJ+B6CWn5QPzD5wfmou5WDE=",

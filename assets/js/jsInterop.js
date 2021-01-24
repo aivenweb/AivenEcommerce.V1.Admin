@@ -230,9 +230,11 @@
 
 
 window.onSignIn = function (googleUser) {
-    console.log(googleUser.uc.id_token);
 
-    DotNet.invokeMethodAsync('AivenEcommerce.V1.Admin.Wasm', 'ReturnArrayAsync', googleUser.uc.id_token)
+    let token = googleUser.getAuthResponse().id_token;
+    console.log(token);
+
+    DotNet.invokeMethodAsync('AivenEcommerce.V1.Admin.Wasm', 'ReturnArrayAsync', token)
         .then(data => {
             data.push(4);
             console.log(data);
