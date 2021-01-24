@@ -28,12 +28,12 @@
                                     <div class="avatar avatar-xl"><img src="@customer.Picture.ToString()" /></div>
                                 </div>
                                 <div class="col-md-8 text-center">
-                                    @customer.Name @customer.LastName
+                                    <p>@customer.Name @customer.LastName</p>
+                                    <p>@customer.Email</p>
+                                    <p>Cumpleaños: @customer.Birthday.ToString("dd/MM/yyyy")</p>
+
                                 </div>
 
-                            </div>
-                            <div class="col-md-12 text-center">
-                                @customer.Email
                             </div>
                         </div>
                     </div>

@@ -47,7 +47,29 @@
                                 <input type="email" id="country-floating" class="form-control" name="country-floating" autocomplete="off" placeholder="Email" @bind="email">
                             </div>
                         </div>
-
+                        <div class="col-md-6 col-12">
+                            <div class="form-group">
+                                <label>Sexo</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="@( (int)Gender.Male)" @onchange="RadioSelection" checked=@(gender == Gender.Male)>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Hombre
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="@( (int)Gender.Female)" @onchange="RadioSelection" checked=@(gender == Gender.Female)>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Mujer
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-group">
+                                <label for="country-floating">Fecha de Incio de Validez</label>
+                                <input class="form-control" type="date" @bind="birthday" />
+                            </div>
+                        </div>
 
                         <div class="col-12 d-flex justify-content-end">
                             <button class="btn btn-primary mr-1 mb-1" @onclick="Save">Crear</button>
@@ -60,16 +82,18 @@
 
     </section>
 </div>
-@code{
 
+@code{
     string name = string.Empty;
     string lastname = string.Empty;
     string email = string.Empty;
     string pictureUri = ImageConstants.PERSONIMAGEDEFAULT;
+    DateTime birthday = default;
+    Gender gender = Gender.Other;
 
     async Task Save(MouseEventArgs args)
     {
-        var result = await CustomerService.CreateAsync(new(name, lastname, email, new(pictureUri)));
+        var result = await CustomerService.CreateAsync(new(name, lastname, email, new(pictureUri), birthday, gender));
 
         if (result.IsSuccess)
         {
@@ -85,5 +109,9 @@
     {
         return JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.replaceIcons").AsTask();
     }
-}
+
+    void RadioSelection(ChangeEventArgs args)
+    {
+        gender = (Gender)int.Parse(args.Value.ToString());
+    }
 }
