@@ -1673,7 +1673,7 @@
       "url": "_content\/Microsoft.AspNetCore.Components.WebAssembly.Authentication\/AuthenticationService.js"
     },
     {
-      "hash": "sha256-nkl0ayLOmP7BpiVOhFirK\/DAYg\/hescdiA288rgtens=",
+      "hash": "sha256-5\/7RgOpXPCr6cTwdGTgUbu+ptbI7ATzRquVo9gwAMJI=",
       "url": "_framework\/AivenEcommerce.V1.Domain.Shared.dll"
     },
     {
@@ -1769,7 +1769,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-gPsbSZ5yHlKidxdzurZ\/mXO1wA\/f9euunQczfsOeFW0=",
+      "hash": "sha256-HpX+uFMmrXlkiBiqiF1lX0CQE4iDkNY9\/4aGGmLhE8c=",
       "url": "_framework\/AivenEcommerce.V1.Admin.Wasm.dll"
     },
     {
@@ -1917,7 +1917,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-hL0RrJoFX1bDph1V0kOPf8xgmzSxEzRXfb52eas+n7Y=",
+      "hash": "sha256-F\/5eLcgK0xtFjgfcCPmYyjSEdBKIVMjeu9RjJMaSEr4=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -1925,5 +1925,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "fClJhI9V"
+  "version": "KKpxr9od"
 };
