@@ -32,12 +32,12 @@ namespace AivenEcommerce.V1.Admin.Wasm.Http
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             _spinnerService.Show();
-
             var JwtUser = _sessionStorage.GetItem<JwtUserDto>("user-authenticated");
+            
 
-            if (JwtUser is not null and { AccessToken: not null })
+            if (JwtUser is not null and { JwtToken: not null and { AccessToken: not null } })
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("bearer", JwtUser.AccessToken);
+                request.Headers.Authorization = new AuthenticationHeaderValue("bearer", JwtUser.JwtToken.AccessToken);
             }
 
             try
