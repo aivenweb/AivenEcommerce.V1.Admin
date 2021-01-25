@@ -12,11 +12,9 @@
     },
 
     hideModal: function (elementId) {
-        var myModal = new bootstrap.Modal(document.getElementById(elementId), {
-            keyboard: false
-        })
-
-        myModal.hide();
+        var myModalEl = document.getElementById(elementId)
+        var modal = bootstrap.Modal.getInstance(myModalEl)
+        modal.hide()
     },
     createDropZone: function (selector, url) {
         var myDropzone = new Dropzone(selector, { url: url });
