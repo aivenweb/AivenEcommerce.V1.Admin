@@ -69,6 +69,7 @@
 
     async Task Close(MouseEventArgs args)
     {
+        await JSRuntime.InvokeVoidAsync("AivenEcommerceAdmin.hideModal", "yesNoQuestionModal").AsTask();
         if (OnCloseCallback.HasDelegate)
             await OnCloseCallback.InvokeAsync();
     }
